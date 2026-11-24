@@ -1,0 +1,2394 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MathPink SMA X — Sistem Pertidaksamaan Dua Variabel</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & Fredoka untuk nuansa edukatif ceria -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Fredoka"', 'sans-serif'],
+          },
+          colors: {
+            pinksoft: {
+              50: '#fff5f8',
+              100: '#ffe4ee',
+              200: '#ffc9de',
+              300: '#ff9ec3',
+              400: '#ff649f',
+              500: '#f4367c',
+              600: '#df185e',
+              700: '#bc0d49',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #fff0f6 0%, #ffe3ef 45%, #ffd6e8 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Glassmorphism Card + Shimmer Sweep */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(255, 182, 212, 0.65);
+      box-shadow: 0 12px 32px -8px rgba(244, 54, 124, 0.14);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+    }
+
+    .hover-levitate {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, border-color 0.3s ease;
+    }
+    .hover-levitate:hover {
+      transform: translateY(-6px) scale(1.015);
+      box-shadow: 0 20px 38px -10px rgba(244, 54, 124, 0.25);
+    }
+    .hover-levitate::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+      transform: skewX(-22deg);
+      transition: left 0.75s ease;
+      pointer-events: none;
+    }
+    .hover-levitate:hover::after {
+      left: 160%;
+    }
+
+    /* Animasi Transisi Tab & Staggered Entrance */
+    @keyframes tabEnter {
+      0% { opacity: 0; transform: translateY(22px) scale(0.98); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .animate-tab-enter {
+      animation: tabEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes popInCard {
+      0% { opacity: 0; transform: translateY(18px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .stagger-1 { opacity: 0; animation: popInCard 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s forwards; }
+    .stagger-2 { opacity: 0; animation: popInCard 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.14s forwards; }
+    .stagger-3 { opacity: 0; animation: popInCard 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.23s forwards; }
+    .stagger-4 { opacity: 0; animation: popInCard 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.32s forwards; }
+
+    /* Animasi Karakter Anak Sekolah SMA */
+    @keyframes floatStudent {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes floatStudentAlt {
+      0%, 100% { transform: translateY(-4px); }
+      50% { transform: translateY(5px); }
+    }
+    @keyframes waveArm {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-20deg); }
+      50% { transform: rotate(10deg); }
+      75% { transform: rotate(-16deg); }
+    }
+    @keyframes waveArmLeft {
+      0%, 100% { transform: rotate(0deg); }
+      30% { transform: rotate(18deg); }
+      60% { transform: rotate(-8deg); }
+    }
+    @keyframes windHair {
+      0%, 100% { transform: rotate(0deg) skewX(0deg); }
+      50% { transform: rotate(2.5deg) skewX(-2deg); }
+    }
+    @keyframes tieSway {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-5deg); }
+    }
+    @keyframes bounceHappy {
+      0%, 100% { transform: translateY(0) scale(1); }
+      30% { transform: translateY(-18px) scale(1.06); }
+      60% { transform: translateY(-5px) scale(0.97); }
+    }
+    @keyframes shakeEncourage {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-7px) rotate(-3deg); }
+      40% { transform: translateX(7px) rotate(3deg); }
+      60% { transform: translateX(-5px) rotate(-2deg); }
+      80% { transform: translateX(5px) rotate(2deg); }
+    }
+    @keyframes blinkEyes {
+      0%, 91%, 100% { transform: scaleY(1); }
+      95% { transform: scaleY(0.08); }
+    }
+    @keyframes walkAcrossSchool {
+      0% { transform: translateX(-80px); }
+      100% { transform: translateX(calc(100vw + 80px)); }
+    }
+    @keyframes walkBob {
+      0%, 100% { transform: translateY(0px) rotate(-2deg); }
+      50% { transform: translateY(-5px) rotate(2deg); }
+    }
+    @keyframes floatBubble {
+      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+      50% { transform: translateY(-18px) rotate(8deg) scale(1.06); }
+    }
+    @keyframes sparkleTwinkle {
+      0%, 100% { opacity: 0.2; transform: scale(0.7) rotate(0deg); }
+      50% { opacity: 1; transform: scale(1.25) rotate(25deg); }
+    }
+    @keyframes spinSlow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes comboFlame {
+      0%, 100% { transform: scale(1) rotate(-2deg); }
+      50% { transform: scale(1.14) rotate(3deg); }
+    }
+
+    .student-float {
+      animation: floatStudent 3.2s ease-in-out infinite;
+    }
+    .student-float-alt {
+      animation: floatStudentAlt 3.6s ease-in-out infinite;
+    }
+    .student-wave {
+      transform-origin: 138px 135px;
+      animation: waveArm 2.1s ease-in-out infinite;
+    }
+    .student-wave-left {
+      transform-origin: 62px 135px;
+      animation: waveArmLeft 2.4s ease-in-out infinite;
+    }
+    .hair-sway {
+      transform-origin: 100px 55px;
+      animation: windHair 3.5s ease-in-out infinite;
+    }
+    .tie-sway {
+      transform-origin: 100px 128px;
+      animation: tieSway 2.8s ease-in-out infinite;
+    }
+    .student-happy {
+      animation: bounceHappy 0.7s ease-in-out 2;
+    }
+    .student-encourage {
+      animation: shakeEncourage 0.55s ease-in-out 2;
+    }
+    .student-blink {
+      transform-origin: center;
+      animation: blinkEyes 3.8s infinite;
+    }
+    .student-blink-delayed {
+      transform-origin: center;
+      animation: blinkEyes 4.4s 1.3s infinite;
+    }
+    .bg-deco {
+      animation: floatBubble 6s ease-in-out infinite;
+    }
+    .sparkle-star {
+      animation: sparkleTwinkle 2.8s ease-in-out infinite;
+    }
+    .spin-slow {
+      animation: spinSlow 9s linear infinite;
+    }
+    .combo-active {
+      animation: comboFlame 0.6s ease-in-out infinite;
+    }
+    .walking-chibi-track {
+      animation: walkAcrossSchool 22s linear infinite;
+    }
+    .walking-chibi-bob {
+      animation: walkBob 0.55s ease-in-out infinite;
+    }
+
+    /* Partikel Jejak Kursor & Ripple Klik */
+    .cursor-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      font-weight: 800;
+      user-select: none;
+      animation: particleFade 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes particleFade {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.6) rotate(0deg); }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.3) rotate(var(--rot)); }
+    }
+
+    /* Speech Bubble Pop */
+    @keyframes bubblePop {
+      0% { transform: scale(0.85); opacity: 0.5; }
+      60% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .bubble-pop {
+      animation: bubblePop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Styling Rumus Matematika */
+    .math-box {
+      font-family: 'Cambria Math', 'Times New Roman', Georgia, serif;
+      letter-spacing: 0.01em;
+    }
+    .system-brace {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .system-brace::before {
+      content: "{";
+      font-size: 2.6rem;
+      line-height: 1;
+      font-weight: 300;
+      color: #df185e;
+      font-family: Georgia, serif;
+    }
+
+    /* Pecahan Rapi */
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      font-size: 0.85em;
+      margin: 0 2px;
+    }
+    .frac > span:first-child {
+      border-bottom: 1.5px solid currentColor;
+      padding: 0 3px;
+      line-height: 1.1;
+    }
+    .frac > span:last-child {
+      padding: 0 3px;
+      line-height: 1.1;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #ffe4ee;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #ff649f;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased selection:bg-pink-300 selection:text-pink-950">
+
+  <!-- Canvas Konfeti Perayaan Fullscreen -->
+  <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-50 w-full h-full"></canvas>
+
+  <!-- Dekorasi Latar Belakang Mengambang (Banyak Simbol & Bokeh Pastel) -->
+  <div id="ambient-layer" class="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+    <div class="bg-deco absolute -top-12 -left-12 w-72 h-72 rounded-full bg-pink-300/30 blur-2xl"></div>
+    <div class="bg-deco absolute top-1/3 -right-16 w-80 h-80 rounded-full bg-rose-300/25 blur-3xl" style="animation-delay: 1.5s;"></div>
+    <div class="bg-deco absolute -bottom-16 left-1/4 w-72 h-72 rounded-full bg-fuchsia-200/35 blur-2xl" style="animation-delay: 3s;"></div>
+    <div class="bg-deco absolute top-2/3 left-10 w-56 h-56 rounded-full bg-pink-200/30 blur-2xl" style="animation-delay: 2.2s;"></div>
+
+    <!-- Simbol Matematika & Sparkles Melayang -->
+    <span class="bg-deco absolute top-24 left-6 text-pink-400/30 font-display text-4xl font-bold select-none">≤</span>
+    <span class="bg-deco absolute top-40 right-12 text-rose-400/30 font-display text-3xl font-bold select-none" style="animation-delay: 1.1s;">y ≥ ax² + bx + c</span>
+    <span class="bg-deco absolute bottom-28 right-10 text-pink-500/25 font-display text-4xl font-bold select-none" style="animation-delay: 2.4s;">x² + y</span>
+    <span class="bg-deco absolute top-1/2 left-5 text-fuchsia-400/30 font-display text-3xl font-bold select-none" style="animation-delay: 0.7s;">≥</span>
+    <span class="bg-deco hidden sm:block absolute bottom-44 left-16 text-pink-400/30 font-display text-2xl font-bold select-none" style="animation-delay: 1.8s;">DHP (x, y)</span>
+    <span class="bg-deco hidden md:block absolute top-28 left-1/3 text-rose-400/25 font-display text-3xl font-bold select-none" style="animation-delay: 3.1s;">∑</span>
+    <span class="bg-deco hidden md:block absolute bottom-16 left-1/2 text-pink-400/25 font-display text-3xl font-bold select-none" style="animation-delay: 2.7s;">π • ∞</span>
+
+    <!-- Bintang Kilau (Sparkles) -->
+    <span class="sparkle-star absolute top-32 left-1/4 text-pink-400 text-xl select-none">✦</span>
+    <span class="sparkle-star absolute top-64 right-1/4 text-rose-400 text-2xl select-none" style="animation-delay: 0.9s;">✨</span>
+    <span class="sparkle-star absolute bottom-36 left-1/3 text-fuchsia-400 text-xl select-none" style="animation-delay: 1.7s;">✦</span>
+    <span class="sparkle-star absolute top-1/2 right-8 text-pink-400 text-lg select-none" style="animation-delay: 2.2s;">🌸</span>
+  </div>
+
+  <!-- HEADER & NAVIGASI UTAMA -->
+  <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-pink-200 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
+      <!-- Brand / Logo dengan Animasi Berputar -->
+      <div class="flex items-center gap-3">
+        <div class="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 text-white flex items-center justify-center shadow-md shadow-pink-300 font-display text-xl font-bold group cursor-pointer" onclick="burstClickParticles(event.clientX, event.clientY, true)">
+          <span>∑x</span>
+          <span class="spin-slow absolute -top-1.5 -right-1.5 text-xs">✨</span>
+        </div>
+        <div>
+          <h1 class="font-display text-lg sm:text-xl font-bold text-pink-700 leading-tight flex items-center gap-1.5">
+            <span>MathPink SMA Kelas X</span>
+          </h1>
+          <div class="flex items-center gap-2 mt-0.5">
+            <p class="text-xs text-pink-500 font-medium">Modul KD 3.4 • SPtDV</p>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-pink-100 text-pink-700 text-[10px] font-bold">
+              <span class="w-1.5 h-1.5 rounded-full bg-pink-500 animate-ping"></span>
+              <span id="header-progress-badge">Progres: 25%</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu Navigasi Tab -->
+      <nav class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2" aria-label="Navigasi Utama">
+        <button onclick="switchMainTab('beranda')" id="nav-beranda" class="nav-btn px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all transform hover:scale-105 active:scale-95 flex items-center gap-1.5 bg-pink-600 text-white shadow-md shadow-pink-200">
+          <span>🏫</span> <span>Beranda</span>
+        </button>
+        <button onclick="switchMainTab('materi')" id="nav-materi" class="nav-btn px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all transform hover:scale-105 active:scale-95 flex items-center gap-1.5 bg-pink-100/80 text-pink-700 hover:bg-pink-200">
+          <span>📘</span> <span>Materi & Grafik</span>
+        </button>
+        <button onclick="switchMainTab('quiz')" id="nav-quiz" class="nav-btn px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all transform hover:scale-105 active:scale-95 flex items-center gap-1.5 bg-pink-100/80 text-pink-700 hover:bg-pink-200">
+          <span>📝</span> <span>Quiz Evaluasi</span>
+        </button>
+        <button onclick="switchMainTab('game')" id="nav-game" class="nav-btn px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all transform hover:scale-105 active:scale-95 flex items-center gap-1.5 bg-pink-100/80 text-pink-700 hover:bg-pink-200">
+          <span>🎮</span> <span>Game DHP</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- KONTEN UTAMA -->
+  <main class="relative z-10 max-w-6xl mx-auto px-4 py-6 sm:py-8">
+
+    <!-- ========================================================= -->
+    <!-- TAB 1: BERANDA & PETA KONSEP                              -->
+    <!-- ========================================================= -->
+    <section id="tab-beranda" class="space-y-6 animate-tab-enter">
+      <!-- Hero Banner dengan Pasangan Karakter Anak Sekolah SMA -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 flex flex-col lg:flex-row items-center justify-between gap-6 overflow-hidden relative">
+        <div class="space-y-4 max-w-xl text-center lg:text-left z-10">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-pink-100 border border-pink-300 text-pink-700 text-xs font-bold shadow-sm">
+            <span class="animate-bounce">🎀</span>
+            <span>Matematika Umum Kelas X • KD 3.4 &amp; 4.4</span>
+          </div>
+          <h2 class="font-display text-2xl sm:text-4xl font-bold text-slate-800 leading-snug">
+            Belajar Seru <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-rose-500">Sistem Pertidaksamaan Dua Variabel</span>!
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+            Halo teman-teman kelas X! Bersama <strong>Alya</strong> dan <strong>Raka</strong>, mari kita pelajari cara menggambar grafik dan menentukan <strong>Daerah Himpunan Penyelesaian (DHP)</strong> untuk bentuk <em>Linear (SPtLDV)</em>, <em>Linear-Kuadrat (SPtDVLK)</em>, hingga <em>Kuadrat-Kuadrat (SPtDVKK)</em> secara interaktif!
+          </p>
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
+            <button onclick="switchMainTab('materi')" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold text-sm shadow-lg shadow-pink-300 transition transform hover:-translate-y-1 active:scale-95">
+              Mulai Belajar Materi 🚀
+            </button>
+            <button onclick="switchMainTab('game')" class="px-5 py-3 rounded-2xl bg-white border-2 border-pink-400 text-pink-600 hover:bg-pink-50 font-bold text-sm transition transform hover:-translate-y-1 active:scale-95">
+              Mainkan Game DHP 🎯
+            </button>
+          </div>
+        </div>
+
+        <!-- Pasangan Karakter Siswa & Siswi SMA Berseragam Putih Abu-abu -->
+        <div class="flex flex-col items-center shrink-0 z-10">
+          <div class="relative flex items-end justify-center gap-1 sm:gap-2">
+            <!-- Lingkaran Cahaya Belakang Karakter -->
+            <div class="absolute inset-x-4 bottom-2 top-6 rounded-full bg-gradient-to-tr from-pink-200 via-rose-100 to-white border-4 border-pink-300/70 shadow-inner"></div>
+
+            <!-- KARAKTER 1: SISWI SMA (ALYA) -->
+            <div onclick="cycleHeroSpeech()" title="Klik Alya untuk ganti penyemangat!" class="student-float cursor-pointer relative w-40 h-48 sm:w-48 sm:h-56 flex items-center justify-center group">
+              <svg viewBox="0 0 200 220" class="w-full h-full relative z-10 drop-shadow-md transition-transform group-hover:scale-105" role="img" aria-label="Ilustrasi Animasi Siswi SMA Alya">
+                <!-- Rambut Belakang Bergoyang -->
+                <path class="hair-sway" d="M56 76 C52 38, 148 38, 144 76 C148 106, 142 126, 134 132 L66 132 C58 126, 52 106, 56 76 Z" fill="#2d232e"/>
+                <!-- Pita Pink di Rambut -->
+                <path d="M132 52 L146 44 L142 58 Z" fill="#f4367c"/>
+                <path d="M132 52 L145 64 L134 62 Z" fill="#ff649f"/>
+                <circle cx="133" cy="54" r="4" fill="#bc0d49"/>
+
+                <!-- Leher -->
+                <rect x="91" y="106" width="18" height="18" rx="6" fill="#fed7c3"/>
+
+                <!-- Rok Abu-abu SMA -->
+                <path d="M68 168 L132 168 L140 206 L60 206 Z" fill="#64748b"/>
+                <line x1="85" y1="172" x2="82" y2="206" stroke="#475569" stroke-width="2"/>
+                <line x1="115" y1="172" x2="118" y2="206" stroke="#475569" stroke-width="2"/>
+                <rect x="68" y="164" width="64" height="6" rx="2" fill="#1e293b"/>
+                <rect x="96" y="163" width="8" height="8" rx="1" fill="#fbbf24"/>
+
+                <!-- Kemeja Putih SMA -->
+                <path d="M64 124 C64 118, 136 118, 136 124 L134 165 L66 165 Z" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+                <polygon points="86,118 100,130 92,135" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+                <polygon points="114,118 100,130 108,135" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+                <polygon class="tie-sway" points="96,128 104,128 106,154 100,160 94,154" fill="#64748b"/>
+                <rect x="111" y="137" width="14" height="15" rx="2" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+                <rect x="114" y="139" width="8" height="6" rx="1" fill="#eab308"/>
+
+                <!-- Lengan Kiri Memegang Buku -->
+                <path d="M64 126 C52 136, 54 152, 72 156" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round"/>
+                <circle cx="74" cy="156" r="6" fill="#fed7c3"/>
+                <g transform="rotate(-10 82 152)">
+                  <rect x="66" y="140" width="32" height="24" rx="4" fill="#f4367c" stroke="#be123c" stroke-width="1.5"/>
+                  <rect x="69" y="143" width="26" height="18" rx="2" fill="#ffe4ee"/>
+                  <text x="82" y="155" text-anchor="middle" font-size="9" font-weight="bold" fill="#be123c" font-family="sans-serif">f(x)</text>
+                </g>
+
+                <!-- Lengan Kanan Melambai Ceria -->
+                <g class="student-wave">
+                  <path d="M136 126 C152 122, 162 108, 160 94" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round"/>
+                  <circle cx="160" cy="91" r="6.5" fill="#fed7c3"/>
+                </g>
+
+                <!-- Kepala & Wajah -->
+                <circle cx="100" cy="78" r="34" fill="#fed7c3"/>
+                <path d="M66 74 C68 44, 132 44, 134 74 C124 62, 114 68, 104 60 C95 68, 82 62, 66 74 Z" fill="#2d232e"/>
+                <ellipse cx="79" cy="86" rx="5.5" ry="3" fill="#ff85b3" opacity="0.75"/>
+                <ellipse cx="121" cy="86" rx="5.5" ry="3" fill="#ff85b3" opacity="0.75"/>
+
+                <g class="student-blink">
+                  <circle cx="85" cy="78" r="4.5" fill="#1e1b24"/>
+                  <circle cx="86.5" cy="76.5" r="1.6" fill="#ffffff"/>
+                  <circle cx="115" cy="78" r="4.5" fill="#1e1b24"/>
+                  <circle cx="116.5" cy="76.5" r="1.6" fill="#ffffff"/>
+                </g>
+                <path d="M79 70 Q85 67 90 70" fill="none" stroke="#2d232e" stroke-width="2" stroke-linecap="round"/>
+                <path d="M110 70 Q115 67 121 70" fill="none" stroke="#2d232e" stroke-width="2" stroke-linecap="round"/>
+                <path d="M92 90 Q100 98 108 90" fill="none" stroke="#be123c" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+
+            <!-- KARAKTER 2: SISWA SMA (RAKA) -->
+            <div onclick="cycleHeroSpeech()" title="Klik Raka untuk ganti penyemangat!" class="student-float-alt cursor-pointer relative w-36 h-44 sm:w-44 sm:h-52 flex items-center justify-center group">
+              <svg viewBox="0 0 200 220" class="w-full h-full relative z-10 drop-shadow-md transition-transform group-hover:scale-105" role="img" aria-label="Ilustrasi Animasi Siswa SMA Raka">
+                <!-- Leher -->
+                <rect x="91" y="106" width="18" height="18" rx="6" fill="#f7c8ae"/>
+                <!-- Celana Panjang Abu-abu SMA -->
+                <rect x="70" y="168" width="26" height="38" rx="4" fill="#64748b"/>
+                <rect x="104" y="168" width="26" height="38" rx="4" fill="#64748b"/>
+                <rect x="68" y="164" width="64" height="6" rx="2" fill="#1e293b"/>
+                <rect x="96" y="163" width="8" height="8" rx="1" fill="#fbbf24"/>
+
+                <!-- Kemeja Putih SMA -->
+                <path d="M64 124 C64 118, 136 118, 136 124 L134 165 L66 165 Z" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+                <polygon points="86,118 100,130 92,135" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+                <polygon points="114,118 100,130 108,135" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+                <polygon class="tie-sway" points="96,128 104,128 106,155 100,161 94,155" fill="#475569"/>
+                <rect x="111" y="137" width="14" height="15" rx="2" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+                <rect x="114" y="139" width="8" height="6" rx="1" fill="#eab308"/>
+
+                <!-- Lengan Kiri Melambai -->
+                <g class="student-wave-left">
+                  <path d="M64 126 C48 122, 38 108, 40 94" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round"/>
+                  <circle cx="40" cy="91" r="6.5" fill="#f7c8ae"/>
+                </g>
+
+                <!-- Lengan Kanan Memegang Penggaris Segitiga -->
+                <path d="M136 126 C148 136, 146 152, 128 156" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round"/>
+                <circle cx="126" cy="156" r="6" fill="#f7c8ae"/>
+                <polygon points="116,160 144,160 130,134" fill="#ff9ec3" stroke="#f4367c" stroke-width="1.5" opacity="0.9"/>
+                <polygon points="124,155 136,155 130,144" fill="#ffffff"/>
+
+                <!-- Kepala & Rambut Pendek Rapih -->
+                <circle cx="100" cy="78" r="33" fill="#f7c8ae"/>
+                <path class="hair-sway" d="M65 76 C64 38, 136 38, 135 76 C128 60, 118 64, 108 55 C98 65, 84 58, 65 76 Z" fill="#1e293b"/>
+                <!-- Kacamata Pintar -->
+                <rect x="74" y="71" width="21" height="14" rx="4" fill="none" stroke="#334155" stroke-width="2"/>
+                <rect x="105" y="71" width="21" height="14" rx="4" fill="none" stroke="#334155" stroke-width="2"/>
+                <line x1="95" y1="77" x2="105" y2="77" stroke="#334155" stroke-width="2"/>
+
+                <g class="student-blink-delayed">
+                  <circle cx="85" cy="78" r="4" fill="#1e1b24"/>
+                  <circle cx="86.2" cy="76.5" r="1.4" fill="#ffffff"/>
+                  <circle cx="115" cy="78" r="4" fill="#1e1b24"/>
+                  <circle cx="116.2" cy="76.5" r="1.4" fill="#ffffff"/>
+                </g>
+                <path d="M92 91 Q100 98 108 91" fill="none" stroke="#be123c" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Gelembung Dialog Interaktif -->
+          <button id="hero-speech-bubble" onclick="cycleHeroSpeech()" class="bubble-pop mt-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-pink-600 to-rose-600 text-white text-xs font-bold shadow-md hover:shadow-lg transition transform hover:scale-105 flex items-center gap-2">
+            <span>💬</span>
+            <span id="hero-speech-text">"Ayo taklukkan grafik pertidaksamaan!"</span>
+          </button>
+        </div>
+
+        <!-- Animasi Anak Sekolah Berjalan di Bagian Bawah Banner -->
+        <div class="absolute bottom-0 inset-x-0 h-7 bg-pink-100/70 border-t border-pink-200/80 overflow-hidden pointer-events-none flex items-center">
+          <div class="walking-chibi-track flex items-center gap-3 text-xs font-bold text-pink-700 whitespace-nowrap">
+            <span class="walking-chibi-bob inline-block text-base">🚶‍♀️🎒</span>
+            <span>Menuju Kelas X MIPA • Belajar SPtLDV, SPtDVLK, &amp; SPtDVKK bersama!</span>
+            <span class="walking-chibi-bob inline-block text-base" style="animation-delay: 0.25s;">🚶‍♂️📐</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kompetensi Dasar & Tujuan Pembelajaran -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-card hover-levitate stagger-1 rounded-3xl p-6 space-y-3">
+          <div class="flex items-center gap-2.5 text-pink-600 font-display text-lg font-bold">
+            <span class="w-8 h-8 rounded-xl bg-pink-100 flex items-center justify-center">🎯</span>
+            <h3>Kompetensi Dasar (KD 3.4 &amp; 4.4)</h3>
+          </div>
+          <ul class="space-y-2.5 text-sm text-slate-700">
+            <li class="flex items-start gap-2.5 bg-pink-50/80 p-3 rounded-2xl border border-pink-100">
+              <span class="font-bold text-pink-600">3.4</span>
+              <span>Menjelaskan dan menentukan penyelesaian sistem pertidaksamaan dua variabel (linear-kuadrat dan kuadrat-kuadrat).</span>
+            </li>
+            <li class="flex items-start gap-2.5 bg-pink-50/80 p-3 rounded-2xl border border-pink-100">
+              <span class="font-bold text-pink-600">4.4</span>
+              <span>Menyajikan dan menyelesaikan masalah kontekstual yang berkaitan dengan sistem pertidaksamaan dua variabel.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="glass-card hover-levitate stagger-2 rounded-3xl p-6 space-y-3">
+          <div class="flex items-center gap-2.5 text-pink-600 font-display text-lg font-bold">
+            <span class="w-8 h-8 rounded-xl bg-pink-100 flex items-center justify-center">📖</span>
+            <h3>Glosarium Singkat Modul</h3>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+            <div class="p-3 rounded-2xl bg-rose-50/80 border border-pink-100">
+              <p class="font-bold text-pink-700">Pertidaksamaan</p>
+              <p class="text-slate-600 mt-0.5">Kalimat terbuka dengan relasi &lt;, &gt;, ≤, atau ≥.</p>
+            </div>
+            <div class="p-3 rounded-2xl bg-rose-50/80 border border-pink-100">
+              <p class="font-bold text-pink-700">DHP (Daerah Penyelesaian)</p>
+              <p class="text-slate-600 mt-0.5">Irisan (perpotongan) daerah arsiran dari semua pertidaksamaan dalam sistem.</p>
+            </div>
+            <div class="p-3 rounded-2xl bg-rose-50/80 border border-pink-100">
+              <p class="font-bold text-pink-700">Garis Putus-putus</p>
+              <p class="text-slate-600 mt-0.5">Digunakan untuk tanda &lt; atau &gt; (batas tidak ikut).</p>
+            </div>
+            <div class="p-3 rounded-2xl bg-rose-50/80 border border-pink-100">
+              <p class="font-bold text-pink-700">Garis Penuh (Utuh)</p>
+              <p class="text-slate-600 mt-0.5">Digunakan untuk tanda ≤ atau ≥ (batas ikut dalam DHP).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Peta Konsep Interaktif -->
+      <div class="glass-card stagger-3 rounded-3xl p-6 sm:p-8">
+        <div class="text-center mb-6">
+          <h3 class="font-display text-xl sm:text-2xl font-bold text-pink-700">🗺️ Peta Konsep Pembelajaran</h3>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">Klik salah satu cabang peta konsep di bawah untuk langsung membuka materinya!</p>
+        </div>
+
+        <div class="flex flex-col items-center">
+          <div class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-pink-600 to-rose-600 text-white font-display font-bold text-base sm:text-lg shadow-lg shadow-pink-200 text-center animate-pulse">
+            Sistem Pertidaksamaan Dua Variabel (SPtDV)
+          </div>
+          <div class="w-1 h-6 bg-pink-400"></div>
+          <div class="w-3/4 max-w-2xl h-1 bg-pink-400 rounded-full"></div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mt-4">
+            <button onclick="openMateriSub('linear')" class="hover-levitate group text-left p-5 rounded-2xl bg-white hover:bg-pink-50 border-2 border-pink-200 hover:border-pink-500 transition shadow-sm flex flex-col justify-between">
+              <div>
+                <span class="inline-block px-2.5 py-1 rounded-lg bg-pink-100 text-pink-700 text-xs font-bold mb-2">Dasar &amp; Sistem Linear</span>
+                <h4 class="font-display font-bold text-slate-800 group-hover:text-pink-700 text-base">1. PtLDV &amp; SPtLDV</h4>
+                <p class="text-xs text-slate-600 mt-1.5">Pertidaksamaan Linear Dua Variabel &amp; Sistem Linear-Linear (garis lurus &amp; arsiran).</p>
+              </div>
+              <span class="mt-4 text-xs font-bold text-pink-600 group-hover:translate-x-2 transition-transform inline-block">Buka Materi →</span>
+            </button>
+
+            <button onclick="openMateriSub('linkuad')" class="hover-levitate group text-left p-5 rounded-2xl bg-white hover:bg-pink-50 border-2 border-pink-200 hover:border-pink-500 transition shadow-sm flex flex-col justify-between">
+              <div>
+                <span class="inline-block px-2.5 py-1 rounded-lg bg-rose-100 text-rose-700 text-xs font-bold mb-2">Kegiatan Belajar 1</span>
+                <h4 class="font-display font-bold text-slate-800 group-hover:text-pink-700 text-base">2. SPtDVLK (Linear-Kuadrat)</h4>
+                <p class="text-xs text-slate-600 mt-1.5">Kombinasi pertidaksamaan garis lurus (derajat 1) dan kurva parabola (derajat 2).</p>
+              </div>
+              <span class="mt-4 text-xs font-bold text-pink-600 group-hover:translate-x-2 transition-transform inline-block">Buka Materi →</span>
+            </button>
+
+            <button onclick="openMateriSub('kuadkuad')" class="hover-levitate group text-left p-5 rounded-2xl bg-white hover:bg-pink-50 border-2 border-pink-200 hover:border-pink-500 transition shadow-sm flex flex-col justify-between">
+              <div>
+                <span class="inline-block px-2.5 py-1 rounded-lg bg-fuchsia-100 text-fuchsia-700 text-xs font-bold mb-2">Kegiatan Belajar 2</span>
+                <h4 class="font-display font-bold text-slate-800 group-hover:text-pink-700 text-base">3. SPtDVKK (Kuadrat-Kuadrat)</h4>
+                <p class="text-xs text-slate-600 mt-1.5">Irisan daerah penyelesaian dari dua kurva parabola kuadrat dua variabel.</p>
+              </div>
+              <span class="mt-4 text-xs font-bold text-pink-600 group-hover:translate-x-2 transition-transform inline-block">Buka Materi →</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 2: MATERI PEMBELAJARAN & SIMULATOR GRAFIK             -->
+    <!-- ========================================================= -->
+    <section id="tab-materi" class="hidden space-y-6 animate-tab-enter">
+      <!-- Sub-Navigasi Materi -->
+      <div class="glass-card rounded-2xl p-2 flex flex-wrap gap-2 justify-center">
+        <button onclick="switchMateriSub('linear')" id="sub-btn-linear" class="sub-mat-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition transform hover:scale-105 bg-pink-600 text-white shadow">
+          1. Linear Dua Variabel (PtLDV &amp; SPtLDV)
+        </button>
+        <button onclick="switchMateriSub('linkuad')" id="sub-btn-linkuad" class="sub-mat-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition transform hover:scale-105 bg-pink-50 text-pink-700 hover:bg-pink-100">
+          2. Linear–Kuadrat (SPtDVLK)
+        </button>
+        <button onclick="switchMateriSub('kuadkuad')" id="sub-btn-kuadkuad" class="sub-mat-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition transform hover:scale-105 bg-pink-50 text-pink-700 hover:bg-pink-100">
+          3. Kuadrat–Kuadrat (SPtDVKK)
+        </button>
+      </div>
+
+      <!-- SUB-MATERI 1: PtLDV & SPtLDV -->
+      <div id="materi-linear" class="space-y-6 animate-tab-enter">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-7 glass-card rounded-3xl p-6 space-y-4">
+            <div class="inline-block px-3 py-1 rounded-full bg-pink-100 text-pink-700 text-xs font-bold">
+              Bagian 1 • Konsep Dasar &amp; Sistem Linear
+            </div>
+            <h2 class="font-display text-xl sm:text-2xl font-bold text-slate-800">
+              Pertidaksamaan &amp; Sistem Pertidaksamaan Linear Dua Variabel
+            </h2>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              <strong>Pertidaksamaan Linear Dua Variabel (PtLDV)</strong> adalah kalimat terbuka yang memuat dua variabel (misalnya <em>x</em> dan <em>y</em>) berderajat satu dan dihubungkan dengan tanda ketidaksamaan (<code>&lt;</code>, <code>&gt;</code>, <code>≤</code>, atau <code>≥</code>). Jika terdapat dua atau lebih PtLDV yang digabung menjadi satu kesatuan, disebut <strong>Sistem Pertidaksamaan Linear Dua Variabel (SPtLDV)</strong>.
+            </p>
+
+            <div class="p-4 rounded-2xl bg-pink-50 border border-pink-200 space-y-2">
+              <p class="text-xs font-bold uppercase tracking-wider text-pink-700">Bentuk Umum PtLDV &amp; SPtLDV:</p>
+              <div class="flex flex-wrap gap-4 items-center">
+                <div class="px-4 py-2 bg-white rounded-xl border border-pink-200 math-box text-base font-semibold text-slate-800">
+                  ax + by &lt; c &nbsp;|&nbsp; ax + by ≤ c &nbsp;|&nbsp; ax + by &gt; c &nbsp;|&nbsp; ax + by ≥ c
+                </div>
+              </div>
+              <p class="text-xs text-slate-600">
+                Dengan <em>a, b</em> = koefisien (tidak keduanya nol), dan <em>c</em> = konstanta.
+              </p>
+            </div>
+
+            <div class="space-y-2">
+              <h3 class="font-display font-bold text-base text-pink-700">Langkah Menentukan Daerah Himpunan Penyelesaian (DHP):</h3>
+              <ol class="list-decimal list-inside space-y-1.5 text-sm text-slate-700 bg-white/70 p-4 rounded-2xl border border-pink-100">
+                <li>Ubah tanda pertidaksamaan menjadi tanda sama dengan (<code>=</code>) untuk menggambar garis batas.</li>
+                <li>Tentukan titik potong terhadap <strong>sumbu-X</strong> (syarat <em>y = 0</em>) dan <strong>sumbu-Y</strong> (syarat <em>x = 0</em>).</li>
+                <li>Perhatikan jenis garis:
+                  <span class="inline-block px-2 py-0.5 rounded bg-pink-100 text-pink-800 text-xs font-semibold">Putus-putus (- - -)</span> untuk <code>&lt;</code> atau <code>&gt;</code>, dan
+                  <span class="inline-block px-2 py-0.5 rounded bg-rose-100 text-rose-800 text-xs font-semibold">Garis Penuh (—)</span> untuk <code>≤</code> atau <code>≥</code>.
+                </li>
+                <li><strong>Uji Titik</strong> (misal titik <code>(0, 0)</code> jika tidak dilalui garis). Jika bernilai <strong>BENAR</strong>, arsir daerah yang memuat titik uji tersebut.</li>
+              </ol>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 border border-pink-200 space-y-2">
+              <h4 class="font-bold text-sm text-pink-800">📌 Contoh Soal Modul (Halaman 10):</h4>
+              <p class="text-sm text-slate-700">
+                Tentukan DHP dari pertidaksamaan linear dua variabel: <strong class="math-box text-pink-700">x - 2y ≤ -2</strong>
+              </p>
+              <div class="text-xs text-slate-600 space-y-1 bg-white/80 p-3 rounded-xl">
+                <p>1. Persamaan garis batas: <strong>x - 2y = -2</strong></p>
+                <p>2. Titik potong: jika <em>y = 0</em> → <em>x = -2</em> didapat <strong>(-2, 0)</strong>; jika <em>x = 0</em> → <em>y = 1</em> didapat <strong>(0, 1)</strong>.</p>
+                <p>3. Uji titik <strong>(0, 0)</strong>: <code>0 - 2(0) ≤ -2</code> → <code>0 ≤ -2</code> (<strong>SALAH</strong>). Maka arsiran menjauhi titik (0, 0) (ke arah atas kiri garis).</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Simulator Grafik Interaktif PtLDV & SPtLDV -->
+          <div class="lg:col-span-5 glass-card rounded-3xl p-5 flex flex-col justify-between space-y-4">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="font-display font-bold text-base text-pink-700">🧪 Simulator Grafik &amp; Uji Titik</h3>
+                <span class="px-2.5 py-0.5 rounded-full bg-pink-100 text-pink-700 text-[11px] font-bold animate-pulse">Animasi Aktif!</span>
+              </div>
+              <p class="text-xs text-slate-600 mb-3">
+                Pilih preset untuk melihat animasi menggambar garis &amp; arsiran, lalu <strong>klik titik mana saja</strong> pada grafik untuk gelombang sonar uji titik!
+              </p>
+
+              <div class="grid grid-cols-2 gap-2 mb-3">
+                <button onclick="setLinearSim('modul')" class="px-3 py-2 rounded-xl bg-pink-600 text-white text-xs font-bold hover:bg-pink-700 transition transform active:scale-95">
+                  Contoh: x - 2y ≤ -2
+                </button>
+                <button onclick="setLinearSim('sistem')" class="px-3 py-2 rounded-xl bg-rose-500 text-white text-xs font-bold hover:bg-rose-600 transition transform active:scale-95">
+                  Sistem SPtLDV (2 Garis)
+                </button>
+              </div>
+
+              <div id="linear-sim-formula" class="p-2.5 rounded-xl bg-pink-50 border border-pink-200 text-center math-box font-bold text-sm text-pink-800 mb-2">
+                x - 2y ≤ -2
+              </div>
+            </div>
+
+            <div class="relative w-full aspect-square bg-white rounded-2xl border-2 border-pink-200 overflow-hidden shadow-inner">
+              <canvas id="canvas-linear" class="w-full h-full cursor-crosshair"></canvas>
+            </div>
+
+            <div id="linear-test-result" class="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-700">
+              💡 <strong>Tips:</strong> Klik pada koordinat di atas (misal di (0,0) atau (-2,3)) untuk melihat gelombang uji titik secara otomatis!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUB-MATERI 2: SPtDVLK (Linear - Kuadrat) -->
+      <div id="materi-linkuad" class="hidden space-y-6 animate-tab-enter">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-7 glass-card rounded-3xl p-6 space-y-4">
+            <div class="inline-block px-3 py-1 rounded-full bg-rose-100 text-rose-700 text-xs font-bold">
+              Kegiatan Pembelajaran 1 • Modul KD 3.4
+            </div>
+            <h2 class="font-display text-xl sm:text-2xl font-bold text-slate-800">
+              Sistem Pertidaksamaan Dua Variabel Linear–Kuadrat (SPtDVLK)
+            </h2>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              <strong>SPtDVLK</strong> adalah kumpulan beberapa pertidaksamaan yang sedikitnya memuat <strong>satu pertidaksamaan linear</strong> dan <strong>satu pertidaksamaan kuadrat dua variabel</strong>.
+            </p>
+
+            <div class="p-4 rounded-2xl bg-pink-50 border border-pink-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <p class="text-xs font-bold uppercase text-pink-700 mb-1">Bentuk Umum SPtDVLK:</p>
+                <div class="system-brace math-box text-base font-bold text-slate-800">
+                  <div>
+                    <div>y * ax + b</div>
+                    <div>y * px² + qx + r</div>
+                  </div>
+                </div>
+              </div>
+              <div class="text-xs text-slate-600 bg-white p-3 rounded-xl border border-pink-100">
+                <p><strong>Keterangan:</strong></p>
+                <p>• Tanda <code>*</code> adalah <code>&lt;, &gt;, ≤,</code> atau <code>≥</code></p>
+                <p>• Variabel: <em>x</em> dan <em>y</em></p>
+                <p>• Koefisien: <em>a, p, q</em> | Konstanta: <em>b, r</em></p>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <h3 class="font-display font-bold text-base text-pink-700">Langkah Menggambar Pertidaksamaan Kuadrat (Parabola):</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                <div class="p-3 rounded-2xl bg-white border border-pink-100">
+                  <span class="font-bold text-pink-600 block mb-1">1. Arah Terbuka Kurva (Nilai p)</span>
+                  Jika <strong>p &gt; 0</strong> parabola terbuka <strong>ke atas (∪)</strong>. Jika <strong>p &lt; 0</strong> parabola terbuka <strong>ke bawah (∩)</strong>.
+                </div>
+                <div class="p-3 rounded-2xl bg-white border border-pink-100">
+                  <span class="font-bold text-pink-600 block mb-1">2. Titik Potong Sumbu-X &amp; Y</span>
+                  Sumbu-X (syarat <em>y = 0</em>, faktorkan). Sumbu-Y (syarat <em>x = 0</em>, didapat titik <em>(0, r)</em>).
+                </div>
+                <div class="p-3 rounded-2xl bg-white border border-pink-100">
+                  <span class="font-bold text-pink-600 block mb-1">3. Titik Puncak (xₚ, yₚ)</span>
+                  <span class="math-box font-semibold">xₚ = -q / (2p)</span> dan <span class="math-box font-semibold">yₚ = -D / (4p)</span> dengan <span class="math-box">D = q² - 4pr</span>.
+                </div>
+                <div class="p-3 rounded-2xl bg-white border border-pink-100">
+                  <span class="font-bold text-pink-600 block mb-1">4. Irisan Daerah (DHP)</span>
+                  Arsir daerah masing-masing, lalu tentukan <strong>irisan</strong> yang memenuhi kedua pertidaksamaan.
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 border border-pink-200 space-y-2">
+              <h4 class="font-bold text-sm text-pink-800">📌 Contoh Soal Modul (Halaman 12–13):</h4>
+              <div class="system-brace math-box text-sm font-bold text-pink-800">
+                <div>
+                  <div>-x + y ≤ 1</div>
+                  <div>y ≥ x² - 4x + 1</div>
+                </div>
+              </div>
+              <ul class="text-xs text-slate-700 space-y-1 bg-white/85 p-3 rounded-xl list-disc list-inside">
+                <li><strong>Garis -x + y = 1:</strong> melalui (-1, 0) dan (0, 1). Uji (0, 0) → <code>0 ≤ 1</code> (Benar, arsir ke bawah kanan garis).</li>
+                <li><strong>Parabola y = x² - 4x + 1:</strong> terbuka ke atas (a = 1 &gt; 0), titik puncak di <strong>(2, -3)</strong>, memotong sumbu-Y di (0, 1). Uji (0, 0) → <code>0 ≥ 1</code> (Salah, arsir di dalam parabola).</li>
+                <li><strong>Irisan DHP:</strong> Daerah di bawah garis lurus sekaligus di dalam lengkungan parabola (lihat grafik di samping).</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Visualisasi Grafik SPtDVLK -->
+          <div class="lg:col-span-5 glass-card rounded-3xl p-5 flex flex-col justify-between space-y-4">
+            <div>
+              <h3 class="font-display font-bold text-base text-pink-700 mb-1">📊 Visualisasi Grafik SPtDVLK</h3>
+              <p class="text-xs text-slate-600 mb-3">
+                Pilih contoh SPtDVLK dari modul untuk melihat animasi pembentukan kurva &amp; irisan DHP!
+              </p>
+              <div class="grid grid-cols-2 gap-2 mb-3">
+                <button onclick="setLkSim('contoh1')" class="px-3 py-2 rounded-xl bg-pink-600 text-white text-xs font-bold hover:bg-pink-700 transition transform active:scale-95">
+                  Contoh Halaman 12
+                </button>
+                <button onclick="setLkSim('latihan1')" class="px-3 py-2 rounded-xl bg-rose-500 text-white text-xs font-bold hover:bg-rose-600 transition transform active:scale-95">
+                  Latihan Halaman 14
+                </button>
+              </div>
+              <div id="lk-sim-formula" class="p-2.5 rounded-xl bg-pink-50 border border-pink-200 text-center math-box font-bold text-xs sm:text-sm text-pink-800">
+                -x + y ≤ 1 &nbsp;dan&nbsp; y ≥ x² - 4x + 1
+              </div>
+            </div>
+
+            <div class="relative w-full aspect-square bg-white rounded-2xl border-2 border-pink-200 overflow-hidden shadow-inner">
+              <canvas id="canvas-lk" class="w-full h-full cursor-crosshair"></canvas>
+            </div>
+
+            <div id="lk-test-result" class="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-700">
+              💡 Klik titik mana saja pada grafik (misal <code>(2, 0)</code>) untuk membuktikan apakah berada di dalam irisan DHP!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUB-MATERI 3: SPtDVKK (Kuadrat - Kuadrat) -->
+      <div id="materi-kuadkuad" class="hidden space-y-6 animate-tab-enter">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-7 glass-card rounded-3xl p-6 space-y-4">
+            <div class="inline-block px-3 py-1 rounded-full bg-fuchsia-100 text-fuchsia-700 text-xs font-bold">
+              Kegiatan Pembelajaran 2 • Modul KD 3.4
+            </div>
+            <h2 class="font-display text-xl sm:text-2xl font-bold text-slate-800">
+              Sistem Pertidaksamaan Dua Variabel Kuadrat–Kuadrat (SPtDVKK)
+            </h2>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              <strong>SPtDVKK</strong> adalah kumpulan beberapa pertidaksamaan yang memuat paling sedikit dua pertidaksamaan kuadrat dua variabel (semua pertidaksamaan pembentuknya berbentuk kurva kuadrat / parabola).
+            </p>
+
+            <div class="p-4 rounded-2xl bg-pink-50 border border-pink-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <p class="text-xs font-bold uppercase text-pink-700 mb-1">Bentuk Umum SPtDVKK:</p>
+                <div class="system-brace math-box text-base font-bold text-slate-800">
+                  <div>
+                    <div>y * ax² + bx + c</div>
+                    <div>y * px² + qx + r</div>
+                  </div>
+                </div>
+              </div>
+              <div class="text-xs text-slate-600 bg-white p-3 rounded-xl border border-pink-100">
+                <p><strong>Catatan Penting:</strong></p>
+                <p>• Kedua kurva digambar pada satu bidang Kartesius.</p>
+                <p>• DHP adalah <strong>irisan</strong> dari kedua daerah arsiran parabola.</p>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 border border-pink-200 space-y-2">
+              <h4 class="font-bold text-sm text-pink-800">📌 Contoh Soal Modul (Halaman 20–21):</h4>
+              <p class="text-sm text-slate-700">
+                Tentukan daerah penyelesaian dari sistem pertidaksamaan:
+                <strong class="math-box text-pink-700">y ≥ x² - 4</strong> dan <strong class="math-box text-rose-700">y &lt; -x² - x + 2</strong>
+              </p>
+              <div class="text-xs text-slate-700 space-y-1.5 bg-white/85 p-3 rounded-xl">
+                <p><strong>1. Parabola pertama (y ≥ x² - 4):</strong></p>
+                <p class="pl-3">• Terbuka ke atas (a = 1 &gt; 0), puncak di <strong>(0, -4)</strong>, memotong sumbu-X di (-2, 0) &amp; (2, 0). Karena tanda <code>≥</code>, kurva digambar <strong>garis penuh</strong> dan diarsir ke dalam/atas.</p>
+                <p><strong>2. Parabola kedua (y &lt; -x² - x + 2):</strong></p>
+                <p class="pl-3">• Terbuka ke bawah (a = -1 &lt; 0), puncak di <strong>(-0.5, 2.25)</strong>, memotong sumbu-X di (-2, 0) &amp; (1, 0). Karena tanda <code>&lt;</code>, kurva digambar <strong>putus-putus</strong> dan diarsir ke dalam/bawah.</p>
+                <p><strong>3. Irisan DHP:</strong> Daerah berbentuk lensa di antara kedua parabola tersebut!</p>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white border border-pink-200 space-y-1">
+              <h4 class="font-bold text-xs uppercase tracking-wider text-pink-600">💡 Tahukah Kamu? Penerapan SPtDVKK</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Dalam modul KD 3.4 (Halaman 22), SPtDVKK digunakan untuk memodelkan rentang <strong>berat badan ideal (W)</strong> terhadap <strong>tinggi badan (h)</strong> serta pemodelan lintasan proyektil dan batas keamanan konstruksi jembatan lengkung.
+              </p>
+            </div>
+          </div>
+
+          <!-- Visualisasi Grafik SPtDVKK -->
+          <div class="lg:col-span-5 glass-card rounded-3xl p-5 flex flex-col justify-between space-y-4">
+            <div>
+              <h3 class="font-display font-bold text-base text-pink-700 mb-1">📊 Visualisasi Grafik SPtDVKK</h3>
+              <p class="text-xs text-slate-600 mb-3">
+                Amati animasi perpotongan dua parabola dan klik koordinat di dalamnya untuk menguji titik!
+              </p>
+              <div class="grid grid-cols-2 gap-2 mb-3">
+                <button onclick="setKkSim('contoh1')" class="px-3 py-2 rounded-xl bg-pink-600 text-white text-xs font-bold hover:bg-pink-700 transition transform active:scale-95">
+                  Contoh Halaman 20
+                </button>
+                <button onclick="setKkSim('evaluasi13')" class="px-3 py-2 rounded-xl bg-fuchsia-600 text-white text-xs font-bold hover:bg-fuchsia-700 transition transform active:scale-95">
+                  Soal Evaluasi No. 13
+                </button>
+              </div>
+              <div id="kk-sim-formula" class="p-2.5 rounded-xl bg-pink-50 border border-pink-200 text-center math-box font-bold text-xs sm:text-sm text-pink-800">
+                y ≥ x² - 4 &nbsp;dan&nbsp; y &lt; -x² - x + 2
+              </div>
+            </div>
+
+            <div class="relative w-full aspect-square bg-white rounded-2xl border-2 border-pink-200 overflow-hidden shadow-inner">
+              <canvas id="canvas-kk" class="w-full h-full cursor-crosshair"></canvas>
+            </div>
+
+            <div id="kk-test-result" class="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-700">
+              💡 Klik di area tengah (misal titik <code>(0, 0)</code>) untuk membuktikan titik tersebut memenuhi kedua pertidaksamaan kuadrat!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 3: QUIZ INTERAKTIF (DARI EVALUASI MODUL KD 3.4)       -->
+    <!-- ========================================================= -->
+    <section id="tab-quiz" class="hidden space-y-6 animate-tab-enter">
+      <div class="glass-card rounded-3xl p-6 sm:p-8">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-pink-200">
+          <div>
+            <span class="inline-block px-3 py-1 rounded-full bg-pink-100 text-pink-700 text-xs font-bold mb-1">
+              Evaluasi Pembelajaran • Modul KD 3.4
+            </span>
+            <h2 class="font-display text-xl sm:text-2xl font-bold text-slate-800">
+              Quiz Interaktif Sistem Pertidaksamaan Dua Variabel
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600">
+              Kerjakan 10 soal pilihan ganda terkurasi dari Modul SMA Kelas X. Kriteria tuntas minimal skor <strong>75</strong>!
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3 bg-pink-50 px-4 py-2.5 rounded-2xl border border-pink-200 shrink-0">
+            <div id="quiz-mascot-anim" class="w-12 h-12 rounded-full bg-white border-2 border-pink-300 flex items-center justify-center text-2xl shadow-sm">
+              👩‍🎓
+            </div>
+            <div>
+              <p id="quiz-mascot-msg" class="text-xs font-bold text-pink-700">Semangat mengerjakan!</p>
+              <p class="text-[11px] text-slate-500">Skor saat ini: <strong id="quiz-live-score" class="text-pink-600">0</strong> / 100</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="quiz-container" class="pt-6 space-y-6">
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs font-bold text-pink-700">
+              <span id="quiz-progress-text">Soal 1 dari 10</span>
+              <span id="quiz-progress-pct">10%</span>
+            </div>
+            <div class="w-full h-3 bg-pink-100 rounded-full overflow-hidden">
+              <div id="quiz-progress-bar" class="h-full bg-gradient-to-r from-pink-500 to-rose-600 transition-all duration-500" style="width: 10%;"></div>
+            </div>
+          </div>
+
+          <div id="quiz-card-body" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div id="quiz-graph-box" class="hidden lg:col-span-5 bg-white p-3 rounded-2xl border-2 border-pink-200 shadow-inner">
+              <canvas id="quiz-canvas" class="w-full aspect-square rounded-xl"></canvas>
+              <p class="text-[11px] text-center text-slate-500 mt-1.5">Grafik Koordinat Kartesius Soal</p>
+            </div>
+
+            <div id="quiz-question-col" class="lg:col-span-12 space-y-4">
+              <div id="quiz-question-text" class="text-base sm:text-lg font-semibold text-slate-800 leading-relaxed bg-white/80 p-4 rounded-2xl border border-pink-100">
+                Memuat soal...
+              </div>
+
+              <div id="quiz-options" class="grid grid-cols-1 gap-2.5">
+              </div>
+
+              <div id="quiz-explanation" class="hidden p-4 rounded-2xl border text-sm space-y-1">
+              </div>
+
+              <div class="flex items-center justify-between pt-2">
+                <button onclick="prevQuizQuestion()" id="btn-quiz-prev" class="px-4 py-2.5 rounded-xl bg-pink-100 text-pink-700 font-bold text-xs sm:text-sm hover:bg-pink-200 disabled:opacity-40 transition">
+                  ← Sebelumnya
+                </button>
+                <button onclick="nextQuizQuestion()" id="btn-quiz-next" class="px-5 py-2.5 rounded-xl bg-pink-600 text-white font-bold text-xs sm:text-sm hover:bg-pink-700 shadow transition transform hover:scale-105">
+                  Soal Berikutnya →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="quiz-result-screen" class="hidden pt-8 text-center space-y-5 max-w-xl mx-auto animate-tab-enter">
+          <div id="quiz-final-badge" class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-pink-500 to-rose-600 text-white flex items-center justify-center text-4xl shadow-lg shadow-pink-300 animate-bounce">
+            🏆
+          </div>
+          <h3 class="font-display text-2xl sm:text-3xl font-bold text-slate-800">
+            Hasil Evaluasi Belajar Kamu
+          </h3>
+          <div class="p-6 rounded-3xl bg-pink-50 border-2 border-pink-200 space-y-2">
+            <p class="text-sm text-slate-600">Nilai Akhir Kamu:</p>
+            <p id="quiz-final-score" class="font-display text-5xl font-bold text-pink-600">0</p>
+            <p id="quiz-final-status" class="text-sm font-bold text-rose-700 pt-1"></p>
+          </div>
+          <div class="flex flex-wrap justify-center gap-3">
+            <button onclick="restartQuiz()" class="px-6 py-3 rounded-2xl bg-pink-600 hover:bg-pink-700 text-white font-bold text-sm shadow transition transform hover:scale-105">
+              Ulangi Quiz 🔄
+            </button>
+            <button onclick="switchMainTab('game')" class="px-6 py-3 rounded-2xl bg-white border-2 border-pink-400 text-pink-600 hover:bg-pink-50 font-bold text-sm transition transform hover:scale-105">
+              Main Game DHP 🎮
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 4: GAME INTERAKTIF ("TANGKAP TITIK DHP!")              -->
+    <!-- ========================================================= -->
+    <section id="tab-game" class="hidden space-y-6 animate-tab-enter">
+      <div class="glass-card rounded-3xl p-5 sm:p-7">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 pb-4 border-b border-pink-200">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-fuchsia-600 text-white flex items-center justify-center text-2xl shadow animate-bounce">
+              🚀
+            </div>
+            <div>
+              <h2 class="font-display text-xl sm:text-2xl font-bold text-pink-700">
+                Game Interaktif: Penjelajah Koordinat DHP!
+              </h2>
+              <p class="text-xs text-slate-600">
+                Luncurkan roket Alya ke titik target <strong>P(x, y)</strong>! Tentukan apakah titik bintang tersebut berada di dalam <strong>DHP</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="toggleGameSound()" id="btn-sound" class="px-3 py-2 rounded-xl bg-pink-100 text-pink-700 text-xs font-bold hover:bg-pink-200 transition">
+              🔊 Suara: ON
+            </button>
+            <select id="game-level-select" onchange="changeGameLevel()" class="px-3 py-2 rounded-xl bg-white border border-pink-300 text-xs font-bold text-pink-800 focus:outline-none">
+              <option value="1">Level 1: Linear (SPtLDV)</option>
+              <option value="2">Level 2: Linear-Kuadrat</option>
+              <option value="3">Level 3: Kuadrat-Kuadrat</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-4">
+          <div class="p-3 rounded-2xl bg-pink-50 border border-pink-200 text-center">
+            <span class="text-[11px] font-bold text-pink-600 uppercase block">Skor</span>
+            <span id="game-score" class="font-display text-2xl font-bold text-slate-800">0</span>
+          </div>
+          <div class="p-3 rounded-2xl bg-rose-50 border border-pink-200 text-center">
+            <span class="text-[11px] font-bold text-rose-600 uppercase block">Nyawa</span>
+            <span id="game-lives" class="text-xl">❤️❤️❤️</span>
+          </div>
+          <div id="game-combo-box" class="p-3 rounded-2xl bg-fuchsia-50 border border-pink-200 text-center transition-all">
+            <span class="text-[11px] font-bold text-fuchsia-600 uppercase block">Combo</span>
+            <span id="game-combo" class="font-display text-2xl font-bold text-fuchsia-700">0x</span>
+          </div>
+          <div class="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-center">
+            <span class="text-[11px] font-bold text-amber-700 uppercase block">Waktu</span>
+            <span id="game-timer" class="font-display text-2xl font-bold text-amber-700">60s</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div class="lg:col-span-6 relative">
+            <div class="w-full max-w-md mx-auto aspect-square bg-white rounded-3xl border-4 border-pink-300 overflow-hidden shadow-lg relative">
+              <canvas id="game-canvas" class="w-full h-full"></canvas>
+              <div id="game-overlay" class="absolute inset-0 bg-pink-950/75 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center text-white space-y-4">
+                <div class="text-5xl animate-bounce">🎒✨</div>
+                <h3 id="game-overlay-title" class="font-display text-2xl font-bold">Siap Berpetualang di Koordinat?</h3>
+                <p id="game-overlay-desc" class="text-xs sm:text-sm text-pink-100 max-w-xs">
+                  Perhatikan sistem pertidaksamaan &amp; koordinat titik bintang <strong>P(x, y)</strong>, lalu pilih apakah titik tersebut <strong>MASUK DHP</strong> atau <strong>DI LUAR DHP</strong>!
+                </p>
+                <button onclick="startGame()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400 text-white font-display font-bold text-base shadow-lg shadow-pink-900/40 transition transform hover:scale-105">
+                  Mulai Main Sekarang! 🚀
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-6 space-y-4">
+            <div class="p-5 rounded-3xl bg-gradient-to-br from-pink-50 to-white border-2 border-pink-200 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-pink-600 text-white text-xs font-bold">Sistem Pertidaksamaan</span>
+                <span id="game-level-badge" class="text-xs font-bold text-pink-600">Level 1</span>
+              </div>
+
+              <div id="game-system-display" class="p-4 rounded-2xl bg-white border border-pink-200 math-box text-base sm:text-lg font-bold text-slate-800 space-y-1">
+                <div>1) x + y ≤ 4</div>
+                <div>2) y ≥ 1</div>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-between">
+                <div>
+                  <span class="text-xs font-bold text-amber-800 block">Titik Target yang Diuji:</span>
+                  <span id="game-point-display" class="font-display text-2xl font-bold text-pink-700">P(1, 2)</span>
+                </div>
+                <div class="text-3xl animate-pulse">⭐</div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                <button onclick="submitGameAnswer(true)" id="btn-game-yes" disabled class="py-4 px-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-40 text-white font-display font-bold text-base shadow-md shadow-emerald-200 transition transform hover:scale-105 active:scale-95">
+                  ✅ MASUK DHP
+                </button>
+                <button onclick="submitGameAnswer(false)" id="btn-game-no" disabled class="py-4 px-4 rounded-2xl bg-rose-500 hover:bg-rose-600 disabled:opacity-40 text-white font-display font-bold text-base shadow-md shadow-rose-200 transition transform hover:scale-105 active:scale-95">
+                  ❌ DI LUAR DHP
+                </button>
+              </div>
+            </div>
+
+            <div id="game-feedback" class="p-4 rounded-2xl bg-white border border-pink-200 flex items-center gap-3 min-h-[76px]">
+              <span id="game-char-face" class="text-3xl">😊</span>
+              <p id="game-feedback-text" class="text-xs sm:text-sm text-slate-600">
+                Tekan tombol <strong>Mulai Main Sekarang</strong> untuk memunculkan tantangan koordinat pertama!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MASKOT PENDAMPING MELAYANG DI POJOK KANAN BAWAH (INTERAKTIF) -->
+  <div id="floating-helper" class="fixed bottom-4 right-4 z-40 flex items-end gap-2">
+    <div id="helper-bubble" class="hidden sm:block max-w-[210px] bg-white/95 backdrop-blur-md border-2 border-pink-300 rounded-2xl rounded-br-none px-3.5 py-2 shadow-lg text-xs text-slate-700 font-medium bubble-pop">
+      Hai! Klik aku kalau butuh tips belajar SPtDV ya! 🌸
+    </div>
+    <button onclick="triggerCornerHelperTip()" aria-label="Tips Maskot Siswa SMA" class="student-float w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 p-1 shadow-xl shadow-pink-400/50 border-2 border-white flex items-center justify-center transition transform hover:scale-110 active:scale-95">
+      <div class="w-full h-full rounded-full bg-pink-50 flex items-center justify-center text-2xl sm:text-3xl">
+        👩‍🎓
+      </div>
+    </button>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="relative z-10 mt-12 border-t border-pink-200 bg-white/75 backdrop-blur-sm py-5 px-4 text-center text-xs text-slate-600">
+    <p class="font-semibold text-pink-700">Bahan Ajar Interaktif Matematika Umum SMA Kelas X • KD 3.4</p>
+    <p class="mt-1">Sistem Pertidaksamaan Dua Variabel (Linear, Linear-Kuadrat, &amp; Kuadrat-Kuadrat)</p>
+  </footer>
+
+  <!-- ========================================================= -->
+  <!-- JAVASCRIPT LOGIKA INTERAKTIF, GRAFIK, QUIZ, & GAME        -->
+  <!-- ========================================================= -->
+  <script>
+    // =========================================================
+    // 0. EFEK PARTIKEL KURSOR, KLIK & KONFETI PERAYAAN
+    // =========================================================
+    const mathSparkleSymbols = ['✦', '🌸', '✨', '≤', '≥', 'x²', '♥', '★'];
+    let lastTrailTime = 0;
+
+    function spawnParticle(x, y, customSymbols = mathSparkleSymbols) {
+      const el = document.createElement('span');
+      el.className = 'cursor-particle';
+      el.textContent = customSymbols[Math.floor(Math.random() * customSymbols.length)];
+      el.style.left = `${x}px`;
+      el.style.top = `${y}px`;
+      el.style.fontSize = `${12 + Math.random() * 10}px`;
+      const colors = ['#f4367c', '#ec4899', '#d946ef', '#fb7185', '#f59e0b'];
+      el.style.color = colors[Math.floor(Math.random() * colors.length)];
+      el.style.setProperty('--dx', `${(Math.random() - 0.5) * 65}px`);
+      el.style.setProperty('--dy', `${-20 - Math.random() * 45}px`);
+      el.style.setProperty('--rot', `${(Math.random() - 0.5) * 90}deg`);
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 850);
+    }
+
+    window.addEventListener('mousemove', e => {
+      const now = Date.now();
+      if (now - lastTrailTime > 95) {
+        lastTrailTime = now;
+        spawnParticle(e.clientX, e.clientY);
+      }
+    });
+
+    function burstClickParticles(x, y, big = false) {
+      const count = big ? 14 : 6;
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => spawnParticle(x, y), i * 20);
+      }
+    }
+
+    window.addEventListener('click', e => {
+      if (e.target.closest('button')) {
+        burstClickParticles(e.clientX, e.clientY, false);
+      }
+    });
+
+    // Sistem Konfeti Canvas Fullscreen
+    const confettiParticles = [];
+    let confettiAnimId = null;
+
+    function launchConfetti(amount = 85) {
+      const canvas = document.getElementById('confetti-canvas');
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const colors = ['#f4367c', '#ff649f', '#fbbf24', '#34d399', '#a855f7', '#fb7185'];
+
+      for (let i = 0; i < amount; i++) {
+        confettiParticles.push({
+          x: Math.random() * canvas.width,
+          y: -20 - Math.random() * 150,
+          w: 7 + Math.random() * 7,
+          h: 4 + Math.random() * 5,
+          vx: (Math.random() - 0.5) * 4,
+          vy: 2.5 + Math.random() * 4.5,
+          rot: Math.random() * Math.PI * 2,
+          vRot: (Math.random() - 0.5) * 0.2,
+          color: colors[Math.floor(Math.random() * colors.length)]
+        });
+      }
+
+      if (!confettiAnimId) {
+        animateConfetti();
+      }
+    }
+
+    function animateConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = confettiParticles.length - 1; i >= 0; i--) {
+        const p = confettiParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vRot;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+
+        if (p.y > canvas.height + 30) {
+          confettiParticles.splice(i, 1);
+        }
+      }
+
+      if (confettiParticles.length > 0) {
+        confettiAnimId = requestAnimationFrame(animateConfetti);
+      } else {
+        confettiAnimId = null;
+      }
+    }
+
+    // Dialog Interaktif Karakter Siswa & Maskot Pojok
+    const heroQuotes = [
+      '"Ayo taklukkan grafik pertidaksamaan!"',
+      '"Ingat: tanda ≤ dan ≥ pakai garis penuh ya!"',
+      '"Tanda < dan > selalu pakai garis putus-putus!"',
+      '"DHP adalah irisan daerah yang memenuhi semua syarat!"',
+      '"Uji titik (0, 0) cara tercepat cek arah arsiran!"'
+    ];
+    let heroQuoteIdx = 0;
+
+    function cycleHeroSpeech() {
+      heroQuoteIdx = (heroQuoteIdx + 1) % heroQuotes.length;
+      const bubble = document.getElementById('hero-speech-bubble');
+      const textEl = document.getElementById('hero-speech-text');
+      textEl.textContent = heroQuotes[heroQuoteIdx];
+      bubble.classList.remove('bubble-pop');
+      void bubble.offsetWidth;
+      bubble.classList.add('bubble-pop');
+      playTone(580, 0.08);
+    }
+
+    const helperTips = [
+      'Tips: Kalau a > 0 pada y = ax² + bx + c, kurva parabola tersenyum ke atas (∪)! 😊',
+      'Tips: Titik puncak parabola rumusnya xₚ = -b / (2a). Mudah kan? ✨',
+      'Tips: Klik titik mana saja di Simulator Grafik untuk melihat gelombang uji titik! 🎯',
+      'Tips: Kumpulkan Combo berturut-turut di Game DHP untuk skor berlipat! 🚀',
+      'Tips: Kriteria tuntas modul KD 3.4 adalah nilai evaluasi minimal 75! 🎓'
+    ];
+    let helperTipIdx = 0;
+
+    function triggerCornerHelperTip() {
+      helperTipIdx = (helperTipIdx + 1) % helperTips.length;
+      const bubble = document.getElementById('helper-bubble');
+      bubble.classList.remove('hidden', 'bubble-pop');
+      void bubble.offsetWidth;
+      bubble.textContent = helperTips[helperTipIdx];
+      bubble.classList.add('bubble-pop');
+      playTone(640, 0.09);
+    }
+
+    // =========================================================
+    // 1. NAVIGASI TAB UTAMA & SUB-TAB MATERI
+    // =========================================================
+    const visitedTabs = new Set(['beranda']);
+
+    function updateProgressBadge() {
+      const pct = Math.min(100, visitedTabs.size * 25);
+      const badge = document.getElementById('header-progress-badge');
+      if (badge) badge.textContent = `Progres: ${pct}%`;
+    }
+
+    function switchMainTab(tabName) {
+      visitedTabs.add(tabName);
+      updateProgressBadge();
+
+      const tabs = ['beranda', 'materi', 'quiz', 'game'];
+      tabs.forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        el.classList.add('hidden');
+        el.classList.remove('animate-tab-enter');
+        const btn = document.getElementById(`nav-${t}`);
+        btn.classList.remove('bg-pink-600', 'text-white', 'shadow-md', 'shadow-pink-200');
+        btn.classList.add('bg-pink-100/80', 'text-pink-700');
+      });
+
+      const activeSection = document.getElementById(`tab-${tabName}`);
+      activeSection.classList.remove('hidden');
+      void activeSection.offsetWidth;
+      activeSection.classList.add('animate-tab-enter');
+
+      const activeBtn = document.getElementById(`nav-${tabName}`);
+      activeBtn.classList.remove('bg-pink-100/80', 'text-pink-700');
+      activeBtn.classList.add('bg-pink-600', 'text-white', 'shadow-md', 'shadow-pink-200');
+
+      if (tabName === 'materi') {
+        setTimeout(() => {
+          animateLinearGraph();
+          animateLkGraph();
+          animateKkGraph();
+        }, 50);
+      } else if (tabName === 'quiz') {
+        setTimeout(() => renderQuizQuestion(), 50);
+      } else if (tabName === 'game') {
+        setTimeout(() => renderGameCanvas(), 50);
+      }
+    }
+
+    function openMateriSub(subName) {
+      switchMainTab('materi');
+      switchMateriSub(subName);
+    }
+
+    function switchMateriSub(subName) {
+      const subs = ['linear', 'linkuad', 'kuadkuad'];
+      subs.forEach(s => {
+        const el = document.getElementById(`materi-${s}`);
+        el.classList.add('hidden');
+        el.classList.remove('animate-tab-enter');
+        const btn = document.getElementById(`sub-btn-${s}`);
+        btn.classList.remove('bg-pink-600', 'text-white', 'shadow');
+        btn.classList.add('bg-pink-50', 'text-pink-700');
+      });
+
+      const activeEl = document.getElementById(`materi-${subName}`);
+      activeEl.classList.remove('hidden');
+      void activeEl.offsetWidth;
+      activeEl.classList.add('animate-tab-enter');
+
+      const activeSub = document.getElementById(`sub-btn-${subName}`);
+      activeSub.classList.remove('bg-pink-50', 'text-pink-700');
+      activeSub.classList.add('bg-pink-600', 'text-white', 'shadow');
+
+      setTimeout(() => {
+        if (subName === 'linear') animateLinearGraph();
+        if (subName === 'linkuad') animateLkGraph();
+        if (subName === 'kuadkuad') animateKkGraph();
+      }, 40);
+    }
+
+    // =========================================================
+    // 2. UTILITAS MENGGAMBAR BIDANG KARTESIUS & ANIMASI KURVA
+    // =========================================================
+    function setupHiDPICanvas(canvas) {
+      const rect = canvas.getBoundingClientRect();
+      const size = Math.max(rect.width || 340, 260);
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = size * dpr;
+      canvas.height = size * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      return { ctx, size };
+    }
+
+    function drawCartesianGrid(ctx, size, minX, maxX, minY, maxY) {
+      const toPxX = x => ((x - minX) / (maxX - minX)) * size;
+      const toPxY = y => size - ((y - minY) / (maxY - minY)) * size;
+
+      ctx.clearRect(0, 0, size, size);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, size, size);
+
+      // Grid halus
+      ctx.strokeStyle = '#fce7f3';
+      ctx.lineWidth = 1;
+      for (let x = Math.ceil(minX); x <= Math.floor(maxX); x++) {
+        const px = toPxX(x);
+        ctx.beginPath();
+        ctx.moveTo(px, 0);
+        ctx.lineTo(px, size);
+        ctx.stroke();
+      }
+      for (let y = Math.ceil(minY); y <= Math.floor(maxY); y++) {
+        const py = toPxY(y);
+        ctx.beginPath();
+        ctx.moveTo(0, py);
+        ctx.lineTo(size, py);
+        ctx.stroke();
+      }
+
+      // Sumbu X dan Y
+      const originX = toPxX(0);
+      const originY = toPxY(0);
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 1.8;
+
+      if (originY >= 0 && originY <= size) {
+        ctx.beginPath();
+        ctx.moveTo(0, originY);
+        ctx.lineTo(size, originY);
+        ctx.stroke();
+      }
+      if (originX >= 0 && originX <= size) {
+        ctx.beginPath();
+        ctx.moveTo(originX, 0);
+        ctx.lineTo(originX, size);
+        ctx.stroke();
+      }
+
+      // Label Angka Sumbu
+      ctx.fillStyle = '#64748b';
+      ctx.font = '600 10px "Plus Jakarta Sans", sans-serif';
+      const stepX = (maxX - minX) > 16 ? 2 : 1;
+      for (let x = Math.ceil(minX); x <= Math.floor(maxX); x += stepX) {
+        if (x === 0) continue;
+        const px = toPxX(x);
+        ctx.fillText(x, px - 4, Math.min(Math.max(originY + 13, 13), size - 4));
+      }
+      const stepY = (maxY - minY) > 16 ? 2 : 1;
+      for (let y = Math.ceil(minY); y <= Math.floor(maxY); y += stepY) {
+        if (y === 0) continue;
+        const py = toPxY(y);
+        ctx.fillText(y, Math.min(Math.max(originX + 5, 4), size - 18), py + 3);
+      }
+      if (originX >= 0 && originX <= size && originY >= 0 && originY <= size) {
+        ctx.fillText('0', originX + 4, originY + 12);
+      }
+
+      return { toPxX, toPxY };
+    }
+
+    // Mewarnai DHP dengan dukungan animasi mengisi (progress 0..1)
+    function shadeRegion(ctx, size, minX, maxX, minY, maxY, predicateFn, color = 'rgba(244, 54, 124, 0.26)', fillProgress = 1) {
+      if (fillProgress <= 0) return;
+      const step = 3;
+      const maxPx = size * Math.min(1, fillProgress);
+      ctx.fillStyle = color;
+      for (let py = 0; py < size; py += step) {
+        const y = maxY - (py / size) * (maxY - minY);
+        for (let px = 0; px < maxPx; px += step) {
+          const x = minX + (px / size) * (maxX - minX);
+          if (predicateFn(x, y)) {
+            ctx.fillRect(px, py, step, step);
+          }
+        }
+      }
+    }
+
+    // Menggambar kurva secara bertahap dari kiri ke kanan (drawProgress 0..1)
+    function plotCurve(ctx, size, minX, maxX, toPxX, toPxY, fnY, color = '#db2777', dashed = false, drawProgress = 1) {
+      if (drawProgress <= 0) return;
+      const limitPx = size * Math.min(1, drawProgress);
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.6;
+      ctx.setLineDash(dashed ? [6, 5] : []);
+      ctx.beginPath();
+      let started = false;
+      for (let px = 0; px <= limitPx; px += 2) {
+        const x = minX + (px / size) * (maxX - minX);
+        const y = fnY(x);
+        const py = toPxY(y);
+        if (!started) {
+          ctx.moveTo(px, py);
+          started = true;
+        } else {
+          ctx.lineTo(px, py);
+        }
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawTestPin(ctx, toPxX, toPxY, pt, isValid, rippleRadius = 0) {
+      if (!pt) return;
+      const px = toPxX(pt.x);
+      const py = toPxY(pt.y);
+      ctx.save();
+
+      // Gelombang Sonar Ripple saat titik diklik
+      if (rippleRadius > 0) {
+        ctx.beginPath();
+        ctx.arc(px, py, rippleRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = isValid ? 'rgba(16, 185, 129, 0.55)' : 'rgba(239, 68, 68, 0.55)';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+      }
+
+      ctx.beginPath();
+      ctx.arc(px, py, 6.5, 0, Math.PI * 2);
+      ctx.fillStyle = isValid ? '#10b981' : '#ef4444';
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#ffffff';
+      ctx.stroke();
+
+      ctx.fillStyle = '#1e293b';
+      ctx.font = 'bold 11px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText(`(${pt.x}, ${pt.y})`, px + 8, py - 6);
+      ctx.restore();
+    }
+
+    // =========================================================
+    // 3. SIMULATOR GRAFIK BERANIMASI PADA TAB MATERI
+    // =========================================================
+    let linearSimMode = 'modul';
+    let linearTestPt = { x: 0, y: 0 };
+    let linearAnimProgress = 1;
+    let linearRipple = 0;
+
+    function animateLinearGraph() {
+      linearAnimProgress = 0;
+      const step = () => {
+        linearAnimProgress += 0.06;
+        renderLinearCanvas();
+        if (linearAnimProgress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+
+    function triggerLinearRipple() {
+      linearRipple = 4;
+      const step = () => {
+        linearRipple += 2.5;
+        renderLinearCanvas();
+        if (linearRipple < 34) {
+          requestAnimationFrame(step);
+        } else {
+          linearRipple = 0;
+          renderLinearCanvas();
+        }
+      };
+      requestAnimationFrame(step);
+    }
+
+    function setLinearSim(mode) {
+      linearSimMode = mode;
+      const label = document.getElementById('linear-sim-formula');
+      if (mode === 'modul') {
+        label.innerHTML = 'x - 2y ≤ -2 &nbsp;(Contoh Modul Hal. 10)';
+      } else {
+        label.innerHTML = 'x + y ≤ 5 &nbsp;dan&nbsp; 2x - y &lt; 4 &nbsp;(SPtLDV)';
+      }
+      animateLinearGraph();
+    }
+
+    function checkLinearPt(x, y) {
+      if (linearSimMode === 'modul') {
+        return (x - 2 * y) <= -2;
+      } else {
+        return (x + y <= 5) && (2 * x - y < 4);
+      }
+    }
+
+    function renderLinearCanvas() {
+      const canvas = document.getElementById('canvas-linear');
+      if (!canvas) return;
+      const { ctx, size } = setupHiDPICanvas(canvas);
+      const minX = -6, maxX = 6, minY = -5, maxY = 7;
+      const { toPxX, toPxY } = drawCartesianGrid(ctx, size, minX, maxX, minY, maxY);
+
+      const shadeProg = Math.max(0, (linearAnimProgress - 0.35) / 0.65);
+      shadeRegion(ctx, size, minX, maxX, minY, maxY, checkLinearPt, 'rgba(244, 54, 124, 0.28)', shadeProg);
+
+      if (linearSimMode === 'modul') {
+        plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => (x + 2) / 2, '#db2777', false, linearAnimProgress);
+      } else {
+        plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => 5 - x, '#db2777', false, linearAnimProgress);
+        plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => 2 * x - 4, '#7c3aed', true, linearAnimProgress);
+      }
+
+      if (linearTestPt && linearAnimProgress >= 0.9) {
+        const ok = checkLinearPt(linearTestPt.x, linearTestPt.y);
+        drawTestPin(ctx, toPxX, toPxY, linearTestPt, ok, linearRipple);
+      }
+    }
+
+    // Simulator SPtDVLK
+    let lkSimMode = 'contoh1';
+    let lkTestPt = { x: 2, y: 0 };
+    let lkAnimProgress = 1;
+    let lkRipple = 0;
+
+    function animateLkGraph() {
+      lkAnimProgress = 0;
+      const step = () => {
+        lkAnimProgress += 0.06;
+        renderLkCanvas();
+        if (lkAnimProgress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+
+    function triggerLkRipple() {
+      lkRipple = 4;
+      const step = () => {
+        lkRipple += 2.5;
+        renderLkCanvas();
+        if (lkRipple < 34) {
+          requestAnimationFrame(step);
+        } else {
+          lkRipple = 0;
+          renderLkCanvas();
+        }
+      };
+      requestAnimationFrame(step);
+    }
+
+    function setLkSim(mode) {
+      lkSimMode = mode;
+      const label = document.getElementById('lk-sim-formula');
+      if (mode === 'contoh1') {
+        label.innerHTML = '-x + y ≤ 1 &nbsp;dan&nbsp; y ≥ x² - 4x + 1';
+      } else {
+        label.innerHTML = '2x + 3y ≥ 12 &nbsp;dan&nbsp; y ≤ -x² + 2x + 8';
+      }
+      animateLkGraph();
+    }
+
+    function checkLkPt(x, y) {
+      if (lkSimMode === 'contoh1') {
+        return (-x + y <= 1) && (y >= x * x - 4 * x + 1);
+      } else {
+        return (2 * x + 3 * y >= 12) && (y <= -x * x + 2 * x + 8);
+      }
+    }
+
+    function renderLkCanvas() {
+      const canvas = document.getElementById('canvas-lk');
+      if (!canvas) return;
+      const { ctx, size } = setupHiDPICanvas(canvas);
+      const minX = -4, maxX = 7, minY = -4, maxY = 10;
+      const { toPxX, toPxY } = drawCartesianGrid(ctx, size, minX, maxX, minY, maxY);
+
+      const shadeProg = Math.max(0, (lkAnimProgress - 0.35) / 0.65);
+      shadeRegion(ctx, size, minX, maxX, minY, maxY, checkLkPt, 'rgba(244, 54, 124, 0.30)', shadeProg);
+
+      if (lkSimMode === 'contoh1') {
+        plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => x + 1, '#db2777', false, lkAnimProgress);
+        plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => x * x - 4 * x + 1, '#9333ea', false, lkAnimProgress);
+      } else {
+        plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => (12 - 2 * x) / 3, '#db2777', false, lkAnimProgress);
+        plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => -x * x + 2 * x + 8, '#9333ea', false, lkAnimProgress);
+      }
+
+      if (lkTestPt && lkAnimProgress >= 0.9) {
+        drawTestPin(ctx, toPxX, toPxY, lkTestPt, checkLkPt(lkTestPt.x, lkTestPt.y), lkRipple);
+      }
+    }
+
+    // Simulator SPtDVKK
+    let kkSimMode = 'contoh1';
+    let kkTestPt = { x: 0, y: 0 };
+    let kkAnimProgress = 1;
+    let kkRipple = 0;
+
+    function animateKkGraph() {
+      kkAnimProgress = 0;
+      const step = () => {
+        kkAnimProgress += 0.06;
+        renderKkCanvas();
+        if (kkAnimProgress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+
+    function triggerKkRipple() {
+      kkRipple = 4;
+      const step = () => {
+        kkRipple += 2.5;
+        renderKkCanvas();
+        if (kkRipple < 34) {
+          requestAnimationFrame(step);
+        } else {
+          kkRipple = 0;
+          renderKkCanvas();
+        }
+      };
+      requestAnimationFrame(step);
+    }
+
+    function setKkSim(mode) {
+      kkSimMode = mode;
+      const label = document.getElementById('kk-sim-formula');
+      if (mode === 'contoh1') {
+        label.innerHTML = 'y ≥ x² - 4 &nbsp;dan&nbsp; y &lt; -x² - x + 2';
+      } else {
+        label.innerHTML = 'y ≥ x² - 1 &nbsp;dan&nbsp; y ≤ 4 - x²';
+      }
+      animateKkGraph();
+    }
+
+    function checkKkPt(x, y) {
+      if (kkSimMode === 'contoh1') {
+        return (y >= x * x - 4) && (y < -x * x - x + 2);
+      } else {
+        return (y >= x * x - 1) && (y <= 4 - x * x);
+      }
+    }
+
+    function renderKkCanvas() {
+      const canvas = document.getElementById('canvas-kk');
+      if (!canvas) return;
+      const { ctx, size } = setupHiDPICanvas(canvas);
+      const minX = -5, maxX = 5, minY = -6, maxY = 6;
+      const { toPxX, toPxY } = drawCartesianGrid(ctx, size, minX, maxX, minY, maxY);
+
+      const shadeProg = Math.max(0, (kkAnimProgress - 0.35) / 0.65);
+      shadeRegion(ctx, size, minX, maxX, minY, maxY, checkKkPt, 'rgba(236, 72, 153, 0.32)', shadeProg);
+
+      if (kkSimMode === 'contoh1') {
+        plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => x * x - 4, '#db2777', false, kkAnimProgress);
+        plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => -x * x - x + 2, '#9333ea', true, kkAnimProgress);
+      } else {
+        plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => x * x - 1, '#334155', false, kkAnimProgress);
+        plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => 4 - x * x, '#e11d48', false, kkAnimProgress);
+      }
+
+      if (kkTestPt && kkAnimProgress >= 0.9) {
+        drawTestPin(ctx, toPxX, toPxY, kkTestPt, checkKkPt(kkTestPt.x, kkTestPt.y), kkRipple);
+      }
+    }
+
+    // Event Klik untuk Semua Simulator Grafik
+    function attachSimulatorClick(canvasId, bounds, onPick) {
+      const canvas = document.getElementById(canvasId);
+      canvas.addEventListener('click', e => {
+        const rect = canvas.getBoundingClientRect();
+        const relX = (e.clientX - rect.left) / rect.width;
+        const relY = (e.clientY - rect.top) / rect.height;
+        const rawX = bounds.minX + relX * (bounds.maxX - bounds.minX);
+        const rawY = bounds.maxY - relY * (bounds.maxY - bounds.minY);
+        const x = Math.round(rawX * 2) / 2;
+        const y = Math.round(rawY * 2) / 2;
+        onPick({ x, y });
+      });
+    }
+
+    // =========================================================
+    // 4. QUIZ EVALUASI (10 SOAL TERKURASI DARI MODUL KD 3.4)
+    // =========================================================
+    const quizData = [
+      {
+        q: "1. Perhatikan grafik di samping! Garis putus-putus memotong sumbu-X di (4, 0) dan sumbu-Y di (0, -3). Daerah yang diarsir di atas garis merupakan penyelesaian pertidaksamaan....",
+        options: [
+          "4y > 3x - 12",
+          "4y < 3x - 12",
+          "4y ≥ 3x - 12",
+          "4y ≥ 3x + 12",
+          "4y > 3x + 12"
+        ],
+        answer: 0,
+        explanation: "Persamaan garis melalui (4, 0) dan (0, -3) adalah -3x + 4y = -12 atau 4y = 3x - 12. Karena garis putus-putus dan titik uji (0, 0) berada di daerah arsiran (0 > -12 benar), maka pertidaksamaannya adalah 4y > 3x - 12.",
+        drawGraph: (ctx, size) => {
+          const minX = -3, maxX = 7, minY = -4, maxY = 4;
+          const { toPxX, toPxY } = drawCartesianGrid(ctx, size, minX, maxX, minY, maxY);
+          shadeRegion(ctx, size, minX, maxX, minY, maxY, (x, y) => 4 * y > 3 * x - 12, 'rgba(99, 102, 241, 0.28)');
+          plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => (3 * x - 12) / 4, '#3730a3', true);
+        }
+      },
+      {
+        q: "2. Salah satu koordinat titik yang merupakan penyelesaian dari pertidaksamaan linear 2y > 6x - 12 adalah....",
+        options: [
+          "(3, 1)",
+          "(2, 1)",
+          "(1, -4)",
+          "(2, -1)",
+          "(3, -1)"
+        ],
+        answer: 1,
+        explanation: "Substitusikan (2, 1) ke 2y > 6x - 12 → 2(1) > 6(2) - 12 → 2 > 0 (Benar!). Opsi lain menghasilkan pernyataan yang salah."
+      },
+      {
+        q: "3. Di antara pertidaksamaan-pertidaksamaan berikut, manakah yang merupakan pertidaksamaan kuadrat dua variabel?",
+        options: [
+          "y < 2x - 3",
+          "|x|² - 3 > y",
+          "y < 3x² - 6",
+          "x² + y² - 1 > 0 (persamaan lingkaran)",
+          "x² + y³ - 5 > 0"
+        ],
+        answer: 2,
+        explanation: "Pertidaksamaan kuadrat dua variabel memiliki dua variabel (x dan y) dengan pangkat tertinggi variabel adalah 2 dalam bentuk fungsi parabola y * ax² + bx + c, yaitu y < 3x² - 6."
+      },
+      {
+        q: "4. Koordinat titik berikut merupakan penyelesaian dari pertidaksamaan 2y < x² - 4, KECUALI....",
+        options: [
+          "(0, -4)",
+          "(-4, 0)",
+          "(1, 1)",
+          "(0, -3)",
+          "(1, -2)"
+        ],
+        answer: 2,
+        explanation: "Uji titik (1, 1): 2(1) < (1)² - 4 → 2 < -3 (Salah!). Jadi (1, 1) bukan penyelesaian."
+      },
+      {
+        q: "5. Perhatikan grafik SPtDVLK di samping (garis putus-putus dan parabola putus-putus terbuka ke atas dengan puncak (-1, 0)). Daerah yang diarsir merupakan penyelesaian sistem....",
+        options: [
+          "y ≥ 3x + 6 dan y < x² + 2x + 1",
+          "y > 3x + 6 dan y < x² + 2x + 1",
+          "y < 3x + 6 dan y < x² + 2x + 1",
+          "y > 3x + 6 dan y > x² + 2x + 1",
+          "y < 3x + 6 dan y > x² + 2x + 1"
+        ],
+        answer: 3,
+        explanation: "Garis lurus melalui (-2, 0) dan (0, 6) adalah y = 3x + 6. Arsiran berada di atas garis (y > 3x + 6) dan di dalam/atas parabola y = (x + 1)² = x² + 2x + 1 (y > x² + 2x + 1).",
+        drawGraph: (ctx, size) => {
+          const minX = -5, maxX = 3, minY = -2, maxY = 7;
+          const { toPxX, toPxY } = drawCartesianGrid(ctx, size, minX, maxX, minY, maxY);
+          shadeRegion(ctx, size, minX, maxX, minY, maxY, (x, y) => (y > 3 * x + 6) && (y > x * x + 2 * x + 1), 'rgba(99, 102, 241, 0.3)');
+          plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => 3 * x + 6, '#3730a3', true);
+          plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => x * x + 2 * x + 1, '#3730a3', true);
+        }
+      },
+      {
+        q: "6. Ketika menggambar daerah penyelesaian pertidaksamaan 2y ≤ 4x² - 1, Andi mengambil sebuah titik uji. Di akhir tahap menggambar, Andi mendapati daerah yang memuat titik uji tersebut TIDAK ikut terarsir. Koordinat yang mungkin menjadi titik uji Andi adalah....",
+        options: [
+          "(0, -2)",
+          "(1, -1)",
+          "(4, 0)",
+          "(0, 5)",
+          "(1, 1)"
+        ],
+        answer: 3,
+        explanation: "Karena daerah titik uji tidak terarsir, titik uji tersebut harus bernilai SALAH saat disubstitusi ke 2y ≤ 4x² - 1. Uji (0, 5): 2(5) ≤ 4(0)² - 1 → 10 ≤ -1 (Salah!)."
+      },
+      {
+        q: "7. Perhatikan gambar grafik parabola putus-putus yang terbuka ke atas dengan puncak (0, -4) dan arsiran di bagian LUAR parabola. Pertidaksamaan yang sesuai adalah....",
+        options: [
+          "2y < x² - 4",
+          "2y > x² - 4",
+          "2y < x² + 4",
+          "2y > x² + 4",
+          "2y ≤ x² - 4"
+        ],
+        answer: 0,
+        explanation: "Parabola memotong sumbu-X di (-2, 0) dan (2, 0) serta sumbu-Y di (0, -2) jika persamaannya 2y = x² - 4. Uji titik (0, 0) di dalam parabola tidak terarsir → 2(0) < 0 - 4 (Salah), sehingga tandanya 2y < x² - 4.",
+        drawGraph: (ctx, size) => {
+          const minX = -4, maxX = 4, minY = -4, maxY = 2;
+          const { toPxX, toPxY } = drawCartesianGrid(ctx, size, minX, maxX, minY, maxY);
+          shadeRegion(ctx, size, minX, maxX, minY, maxY, (x, y) => 2 * y < x * x - 4, 'rgba(99, 102, 241, 0.28)');
+          plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => (x * x - 4) / 2, '#3730a3', true);
+        }
+      },
+      {
+        q: "8. Dua bilangan memiliki hubungan: selisih dua kali bilangan pertama (x) dan tiga kali bilangan kedua (y) selalu lebih besar dari 12. Bilangan kedua selalu lebih besar atau sama dengan kuadrat bilangan pertama dikurangi dua kali bilangan pertama dikurangi delapan. Model SPtDVLK-nya adalah....",
+        options: [
+          "2x - 3y < 12 dan y > x² - 2x - 8",
+          "2x - 3y > 12 dan y > x² - 2x - 8",
+          "2x - 3y < 12 dan y ≤ x² - 2x - 8",
+          "2x - 3y > 12 dan y ≥ x² - 2x - 8",
+          "2x - 3y ≤ 12 dan y > x² - 2x - 8"
+        ],
+        answer: 3,
+        explanation: "'Selisih 2x dan 3y lebih besar dari 12' → 2x - 3y > 12. 'y lebih besar atau sama dengan x² - 2x - 8' → y ≥ x² - 2x - 8."
+      },
+      {
+        q: "9. Daerah yang merupakan penyelesaian sistem pertidaksamaan kuadrat-kuadrat: y ≥ x² - 1 dan y ≤ 4 - x² ditunjukkan oleh daerah nomor berapa pada grafik di samping?",
+        options: [
+          "Daerah V (di bawah kedua parabola)",
+          "Daerah IV (di sebelah kanan)",
+          "Daerah III (di atas kedua parabola)",
+          "Daerah II (di sebelah kiri)",
+          "Daerah I (irisan tengah di antara kedua parabola)"
+        ],
+        answer: 4,
+        explanation: "Uji titik (0, 0) yang berada di Daerah I: 0 ≥ 0² - 1 (0 ≥ -1, Benar) dan 0 ≤ 4 - 0² (0 ≤ 4, Benar). Jadi irisannya adalah Daerah I!",
+        drawGraph: (ctx, size) => {
+          const minX = -3.5, maxX = 3.5, minY = -4, maxY = 5;
+          const { toPxX, toPxY } = drawCartesianGrid(ctx, size, minX, maxX, minY, maxY);
+          plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => x * x - 1, '#334155', false);
+          plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => 4 - x * x, '#e11d48', false);
+          ctx.fillStyle = '#be123c';
+          ctx.font = 'bold 14px Georgia, serif';
+          ctx.fillText('I', toPxX(0.1), toPxY(0.8));
+          ctx.fillText('II', toPxX(-2.5), toPxY(0.5));
+          ctx.fillText('III', toPxX(1.2), toPxY(3.8));
+          ctx.fillText('IV', toPxX(2.2), toPxY(0.5));
+          ctx.fillText('V', toPxX(-0.8), toPxY(-3));
+        }
+      },
+      {
+        q: "10. Di antara sistem pertidaksamaan berikut, manakah yang TIDAK memiliki daerah penyelesaian (himpunan kosong)?",
+        options: [
+          "y ≥ x² - 9 dan y ≤ 9 - x²",
+          "y ≥ -x² - 2x + 8 dan y ≤ 4 - x²",
+          "y ≥ -x² + 3 dan y ≤ 2x²",
+          "y ≥ 2x² + 8 dan y ≤ -4 - x²",
+          "y ≥ x² - x - 2 dan y ≤ -x² + x + 2"
+        ],
+        answer: 3,
+        explanation: "Pada opsi D, parabola y ≥ 2x² + 8 terbuka ke atas dengan nilai minimum y = 8, sedangkan y ≤ -4 - x² terbuka ke bawah dengan nilai maksimum y = -4. Keduanya tidak pernah berpotongan sehingga tidak ada irisan DHP!"
+      }
+    ];
+
+    let currentQuizIdx = 0;
+    let userQuizAnswers = new Array(quizData.length).fill(null);
+
+    function renderQuizQuestion() {
+      const item = quizData[currentQuizIdx];
+      const total = quizData.length;
+
+      const cardBody = document.getElementById('quiz-card-body');
+      cardBody.classList.remove('animate-tab-enter');
+      void cardBody.offsetWidth;
+      cardBody.classList.add('animate-tab-enter');
+
+      document.getElementById('quiz-progress-text').textContent = `Soal ${currentQuizIdx + 1} dari ${total}`;
+      const pct = Math.round(((currentQuizIdx + 1) / total) * 100);
+      document.getElementById('quiz-progress-pct').textContent = `${pct}%`;
+      document.getElementById('quiz-progress-bar').style.width = `${pct}%`;
+
+      document.getElementById('quiz-question-text').textContent = item.q;
+
+      const graphBox = document.getElementById('quiz-graph-box');
+      const qCol = document.getElementById('quiz-question-col');
+      if (item.drawGraph) {
+        graphBox.classList.remove('hidden');
+        qCol.classList.remove('lg:col-span-12');
+        qCol.classList.add('lg:col-span-7');
+        const qCanvas = document.getElementById('quiz-canvas');
+        const { ctx, size } = setupHiDPICanvas(qCanvas);
+        item.drawGraph(ctx, size);
+      } else {
+        graphBox.classList.add('hidden');
+        qCol.classList.remove('lg:col-span-7');
+        qCol.classList.add('lg:col-span-12');
+      }
+
+      const optionsDiv = document.getElementById('quiz-options');
+      optionsDiv.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D', 'E'];
+      const chosen = userQuizAnswers[currentQuizIdx];
+
+      item.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        let styleClass = 'bg-white hover:bg-pink-50 border-pink-200 text-slate-700 hover:translate-x-1';
+
+        if (chosen !== null) {
+          if (idx === item.answer) {
+            styleClass = 'bg-emerald-50 border-emerald-500 text-emerald-900 font-bold scale-[1.01]';
+          } else if (idx === chosen && chosen !== item.answer) {
+            styleClass = 'bg-rose-50 border-rose-500 text-rose-900 student-encourage';
+          } else {
+            styleClass = 'bg-white/60 border-slate-200 text-slate-400';
+          }
+        }
+
+        btn.className = `w-full text-left p-3.5 rounded-2xl border-2 transition-all duration-200 flex items-center gap-3 ${styleClass}`;
+        btn.disabled = chosen !== null;
+        btn.innerHTML = `
+          <span class="w-8 h-8 rounded-xl bg-pink-100 text-pink-700 font-bold text-xs flex items-center justify-center shrink-0">${letters[idx]}</span>
+          <span class="math-box text-sm sm:text-base">${optText}</span>
+        `;
+        btn.onclick = () => selectQuizAnswer(idx);
+        optionsDiv.appendChild(btn);
+      });
+
+      const expDiv = document.getElementById('quiz-explanation');
+      if (chosen !== null) {
+        expDiv.classList.remove('hidden');
+        const isRight = chosen === item.answer;
+        expDiv.className = `bubble-pop p-4 rounded-2xl border text-xs sm:text-sm space-y-1 ${isRight ? 'bg-emerald-50 border-emerald-300 text-emerald-900' : 'bg-rose-50 border-rose-300 text-rose-900'}`;
+        expDiv.innerHTML = `
+          <p class="font-bold">${isRight ? '🎉 Jawaban Kamu Tepat!' : '💡 Kurang Tepat, Yuk Simak Pembahasannya:'}</p>
+          <p>${item.explanation}</p>
+        `;
+      } else {
+        expDiv.classList.add('hidden');
+      }
+
+      document.getElementById('btn-quiz-prev').disabled = currentQuizIdx === 0;
+      document.getElementById('btn-quiz-next').textContent =
+        currentQuizIdx === total - 1 ? 'Lihat Nilai Akhir 🏁' : 'Soal Berikutnya →';
+    }
+
+    function selectQuizAnswer(optIdx) {
+      userQuizAnswers[currentQuizIdx] = optIdx;
+      const isRight = optIdx === quizData[currentQuizIdx].answer;
+
+      const correctCount = userQuizAnswers.filter((ans, i) => ans === quizData[i].answer).length;
+      const score = Math.round((correctCount / quizData.length) * 100);
+      document.getElementById('quiz-live-score').textContent = score;
+
+      const mascotFace = document.getElementById('quiz-mascot-anim');
+      const mascotMsg = document.getElementById('quiz-mascot-msg');
+      mascotFace.classList.remove('student-happy', 'student-encourage');
+      void mascotFace.offsetWidth;
+
+      if (isRight) {
+        mascotFace.textContent = '🥳';
+        mascotFace.classList.add('student-happy');
+        mascotMsg.textContent = 'Keren! Jawabanmu benar!';
+        playTone(660, 0.12);
+        launchConfetti(35);
+      } else {
+        mascotFace.textContent = '🧐';
+        mascotFace.classList.add('student-encourage');
+        mascotMsg.textContent = 'Tetap semangat, cek pembahasannya!';
+        playTone(260, 0.18);
+      }
+
+      renderQuizQuestion();
+    }
+
+    function prevQuizQuestion() {
+      if (currentQuizIdx > 0) {
+        currentQuizIdx--;
+        renderQuizQuestion();
+      }
+    }
+
+    function nextQuizQuestion() {
+      if (currentQuizIdx < quizData.length - 1) {
+        currentQuizIdx++;
+        renderQuizQuestion();
+      } else {
+        showQuizFinalResult();
+      }
+    }
+
+    function showQuizFinalResult() {
+      document.getElementById('quiz-container').classList.add('hidden');
+      const resScreen = document.getElementById('quiz-result-screen');
+      resScreen.classList.remove('hidden');
+
+      const correctCount = userQuizAnswers.filter((ans, i) => ans === quizData[i].answer).length;
+      const finalScore = Math.round((correctCount / quizData.length) * 100);
+      document.getElementById('quiz-final-score').textContent = finalScore;
+
+      const statusEl = document.getElementById('quiz-final-status');
+      if (finalScore >= 75) {
+        statusEl.textContent = `Selamat! Kamu Lulus Kriteria Ketuntasan Modul (${correctCount}/10 Benar) 🎓✨`;
+        statusEl.className = 'text-sm font-bold text-emerald-700 pt-1';
+        launchConfetti(120);
+      } else {
+        statusEl.textContent = `Skor belum mencapai 75 (${correctCount}/10 Benar). Yuk pelajari kembali materinya lalu coba lagi! 💪`;
+        statusEl.className = 'text-sm font-bold text-rose-700 pt-1';
+      }
+    }
+
+    function restartQuiz() {
+      currentQuizIdx = 0;
+      userQuizAnswers = new Array(quizData.length).fill(null);
+      document.getElementById('quiz-live-score').textContent = '0';
+      document.getElementById('quiz-result-screen').classList.add('hidden');
+      document.getElementById('quiz-container').classList.remove('hidden');
+      renderQuizQuestion();
+    }
+
+    // =========================================================
+    // 5. GAME INTERAKTIF: PENJELAJAH KOORDINAT DHP (DENGAN ANIMASI)
+    // =========================================================
+    let gameSoundOn = true;
+    let gameActive = false;
+    let gameScore = 0;
+    let gameLives = 3;
+    let gameCombo = 0;
+    let gameTimeLeft = 60;
+    let gameTimerInterval = null;
+    let currentChallenge = null;
+    let gamePulsePhase = 0;
+    let gameAnimLoopId = null;
+
+    function playTone(freq, duration = 0.15) {
+      if (!gameSoundOn) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function toggleGameSound() {
+      gameSoundOn = !gameSoundOn;
+      document.getElementById('btn-sound').textContent = gameSoundOn ? '🔊 Suara: ON' : '🔇 Suara: OFF';
+    }
+
+    function changeGameLevel() {
+      const lv = document.getElementById('game-level-select').value;
+      document.getElementById('game-level-badge').textContent = `Level ${lv}`;
+      if (gameActive) {
+        generateGameChallenge();
+      }
+    }
+
+    const challengePools = {
+      1: [
+        {
+          lines: ['1) x + y ≤ 4', '2) x ≥ 0 dan y ≥ 0'],
+          check: (x, y) => (x + y <= 4) && (x >= 0) && (y >= 0),
+          draw: (ctx, size, minX, maxX, toPxX, toPxY) => {
+            plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => 4 - x, '#db2777', false);
+          }
+        },
+        {
+          lines: ['1) x - 2y ≤ -2', '2) x ≤ 4'],
+          check: (x, y) => (x - 2 * y <= -2) && (x <= 4),
+          draw: (ctx, size, minX, maxX, toPxX, toPxY) => {
+            plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => (x + 2) / 2, '#db2777', false);
+          }
+        },
+        {
+          lines: ['1) 2x + y > 2', '2) y ≤ 4'],
+          check: (x, y) => (2 * x + y > 2) && (y <= 4),
+          draw: (ctx, size, minX, maxX, toPxX, toPxY) => {
+            plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => 2 - 2 * x, '#db2777', true);
+            plotCurve(ctx, size, minX, maxX, toPxX, toPxY, () => 4, '#9333ea', false);
+          }
+        }
+      ],
+      2: [
+        {
+          lines: ['1) -x + y ≤ 1', '2) y ≥ x² - 4x + 1'],
+          check: (x, y) => (-x + y <= 1) && (y >= x * x - 4 * x + 1),
+          draw: (ctx, size, minX, maxX, toPxX, toPxY) => {
+            plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => x + 1, '#db2777', false);
+            plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => x * x - 4 * x + 1, '#9333ea', false);
+          }
+        },
+        {
+          lines: ['1) y > x + 1', '2) y ≤ -x² + 5'],
+          check: (x, y) => (y > x + 1) && (y <= -x * x + 5),
+          draw: (ctx, size, minX, maxX, toPxX, toPxY) => {
+            plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => x + 1, '#db2777', true);
+            plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => -x * x + 5, '#9333ea', false);
+          }
+        }
+      ],
+      3: [
+        {
+          lines: ['1) y ≥ x² - 4', '2) y < -x² - x + 2'],
+          check: (x, y) => (y >= x * x - 4) && (y < -x * x - x + 2),
+          draw: (ctx, size, minX, maxX, toPxX, toPxY) => {
+            plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => x * x - 4, '#db2777', false);
+            plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => -x * x - x + 2, '#9333ea', true);
+          }
+        },
+        {
+          lines: ['1) y ≥ x² - 1', '2) y ≤ 4 - x²'],
+          check: (x, y) => (y >= x * x - 1) && (y <= 4 - x * x),
+          draw: (ctx, size, minX, maxX, toPxX, toPxY) => {
+            plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => x * x - 1, '#334155', false);
+            plotCurve(ctx, size, minX, maxX, toPxX, toPxY, x => 4 - x * x, '#e11d48', false);
+          }
+        }
+      ]
+    };
+
+    function startGame() {
+      gameActive = true;
+      gameScore = 0;
+      gameLives = 3;
+      gameCombo = 0;
+      gameTimeLeft = 60;
+
+      updateGameHUD();
+      document.getElementById('game-overlay').classList.add('hidden');
+      document.getElementById('btn-game-yes').disabled = false;
+      document.getElementById('btn-game-no').disabled = false;
+
+      generateGameChallenge();
+
+      clearInterval(gameTimerInterval);
+      gameTimerInterval = setInterval(() => {
+        gameTimeLeft--;
+        document.getElementById('game-timer').textContent = `${gameTimeLeft}s`;
+        if (gameTimeLeft <= 0) {
+          endGame('Waktu Habis! ⏰');
+        }
+      }, 1000);
+
+      cancelAnimationFrame(gameAnimLoopId);
+      const pulseLoop = () => {
+        if (!gameActive) return;
+        gamePulsePhase += 0.1;
+        renderGameCanvas();
+        gameAnimLoopId = requestAnimationFrame(pulseLoop);
+      };
+      gameAnimLoopId = requestAnimationFrame(pulseLoop);
+    }
+
+    function generateGameChallenge() {
+      const lv = document.getElementById('game-level-select').value;
+      const pool = challengePools[lv];
+      const sys = pool[Math.floor(Math.random() * pool.length)];
+
+      let px = 0, py = 0;
+      const wantInside = Math.random() < 0.5;
+      for (let attempt = 0; attempt < 40; attempt++) {
+        const candX = Math.floor(Math.random() * 9) - 3;
+        const candY = Math.floor(Math.random() * 9) - 3;
+        if (sys.check(candX, candY) === wantInside) {
+          px = candX;
+          py = candY;
+          break;
+        }
+      }
+
+      currentChallenge = {
+        sys,
+        pt: { x: px, y: py },
+        isInside: sys.check(px, py)
+      };
+
+      document.getElementById('game-system-display').innerHTML = sys.lines.map(l => `<div>${l}</div>`).join('');
+      document.getElementById('game-point-display').textContent = `P(${px}, ${py})`;
+
+      renderGameCanvas();
+    }
+
+    function renderGameCanvas() {
+      const canvas = document.getElementById('game-canvas');
+      if (!canvas) return;
+      const { ctx, size } = setupHiDPICanvas(canvas);
+      const minX = -5, maxX = 6, minY = -5, maxY = 6;
+      const { toPxX, toPxY } = drawCartesianGrid(ctx, size, minX, maxX, minY, maxY);
+
+      if (currentChallenge) {
+        currentChallenge.sys.draw(ctx, size, minX, maxX, toPxX, toPxY);
+
+        const sx = toPxX(currentChallenge.pt.x);
+        const sy = toPxY(currentChallenge.pt.y);
+        const pulse = 10 + Math.sin(gamePulsePhase) * 5;
+
+        ctx.save();
+        // Lingkaran radar berdenyut di sekitar bintang target
+        ctx.beginPath();
+        ctx.arc(sx, sy, pulse + 6, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(245, 158, 11, 0.22)';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(sx, sy, 9, 0, Math.PI * 2);
+        ctx.fillStyle = '#f59e0b';
+        ctx.fill();
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = '#ffffff';
+        ctx.stroke();
+
+        // Roket kecil mengorbit di dekat bintang target
+        const orbitX = sx + Math.cos(gamePulsePhase * 0.8) * 20;
+        const orbitY = sy + Math.sin(gamePulsePhase * 0.8) * 20;
+        ctx.font = '14px sans-serif';
+        ctx.fillText('🚀', orbitX - 7, orbitY + 5);
+
+        ctx.fillStyle = '#be123c';
+        ctx.font = 'bold 12px "Fredoka", sans-serif';
+        ctx.fillText(`⭐ P(${currentChallenge.pt.x},${currentChallenge.pt.y})`, sx + 12, sy - 10);
+        ctx.restore();
+      }
+    }
+
+    function submitGameAnswer(userSaysInside) {
+      if (!gameActive || !currentChallenge) return;
+
+      const correct = userSaysInside === currentChallenge.isInside;
+      const faceEl = document.getElementById('game-char-face');
+      const textEl = document.getElementById('game-feedback-text');
+      const fbBox = document.getElementById('game-feedback');
+
+      fbBox.classList.remove('bubble-pop', 'student-encourage');
+      void fbBox.offsetWidth;
+
+      if (correct) {
+        gameCombo++;
+        const earned = 10 + gameCombo * 2;
+        gameScore += earned;
+        playTone(740, 0.14);
+        faceEl.textContent = gameCombo >= 3 ? '🔥🤩' : '🤩';
+        fbBox.classList.add('bubble-pop');
+        if (gameCombo >= 3) launchConfetti(30);
+        textEl.innerHTML = `<strong class="text-emerald-700">Hebat (+${earned} poin)!</strong> Titik <strong>P(${currentChallenge.pt.x}, ${currentChallenge.pt.y})</strong> memang <strong>${currentChallenge.isInside ? 'MASUK DHP' : 'DI LUAR DHP'}</strong>.`;
+      } else {
+        gameCombo = 0;
+        gameLives--;
+        playTone(220, 0.25);
+        faceEl.textContent = '😅';
+        fbBox.classList.add('student-encourage');
+        textEl.innerHTML = `<strong class="text-rose-700">Ups, kurang tepat!</strong> Titik <strong>P(${currentChallenge.pt.x}, ${currentChallenge.pt.y})</strong> sebenarnya <strong>${currentChallenge.isInside ? 'MASUK DHP' : 'DI LUAR DHP'}</strong> karena ${currentChallenge.isInside ? 'memenuhi semua pertidaksamaan' : 'tidak memenuhi salah satu pertidaksamaan'}.`;
+      }
+
+      updateGameHUD();
+
+      if (gameLives <= 0) {
+        endGame('Kesempatan Habis! 💔');
+      } else {
+        generateGameChallenge();
+      }
+    }
+
+    function updateGameHUD() {
+      document.getElementById('game-score').textContent = gameScore;
+      const comboEl = document.getElementById('game-combo');
+      const comboBox = document.getElementById('game-combo-box');
+      comboEl.textContent = gameCombo >= 3 ? `🔥 ${gameCombo}x` : `${gameCombo}x`;
+      if (gameCombo >= 3) {
+        comboBox.classList.add('combo-active', 'border-amber-400', 'bg-amber-50');
+      } else {
+        comboBox.classList.remove('combo-active', 'border-amber-400', 'bg-amber-50');
+      }
+      document.getElementById('game-lives').textContent = '❤️'.repeat(Math.max(0, gameLives)) + '🤍'.repeat(Math.max(0, 3 - gameLives));
+    }
+
+    function endGame(reasonTitle) {
+      gameActive = false;
+      clearInterval(gameTimerInterval);
+      cancelAnimationFrame(gameAnimLoopId);
+      document.getElementById('btn-game-yes').disabled = true;
+      document.getElementById('btn-game-no').disabled = true;
+
+      if (gameScore >= 50) launchConfetti(100);
+
+      const overlay = document.getElementById('game-overlay');
+      overlay.classList.remove('hidden');
+      document.getElementById('game-overlay-title').textContent = reasonTitle;
+      document.getElementById('game-overlay-desc').innerHTML = `Skor Akhir Kamu: <strong class="text-2xl text-amber-300 block mt-1">${gameScore} Poin</strong>Ayo main lagi atau naikkan level tantangannya!`;
+    }
+
+    // =========================================================
+    // 6. INISIALISASI SAAT HALAMAN DIMUAT
+    // =========================================================
+    window.addEventListener('load', () => {
+      attachSimulatorClick('canvas-linear', { minX: -6, maxX: 6, minY: -5, maxY: 7 }, pt => {
+        linearTestPt = pt;
+        const ok = checkLinearPt(pt.x, pt.y);
+        const res = document.getElementById('linear-test-result');
+        if (linearSimMode === 'modul') {
+          const val = pt.x - 2 * pt.y;
+          res.innerHTML = `Uji Titik <strong>(${pt.x}, ${pt.y})</strong>: <code>${pt.x} - 2(${pt.y}) = ${val} ≤ -2</code> → <strong class="${ok ? 'text-emerald-600' : 'text-rose-600'}">${ok ? 'BENAR (Masuk DHP ✅)' : 'SALAH (Di luar DHP ❌)'}</strong>`;
+        } else {
+          res.innerHTML = `Uji Titik <strong>(${pt.x}, ${pt.y})</strong> pada SPtLDV: <strong class="${ok ? 'text-emerald-600' : 'text-rose-600'}">${ok ? 'Memenuhi kedua garis (Masuk DHP ✅)' : 'Tidak memenuhi sistem (Di luar DHP ❌)'}</strong>`;
+        }
+        playTone(ok ? 660 : 300, 0.1);
+        triggerLinearRipple();
+      });
+
+      attachSimulatorClick('canvas-lk', { minX: -4, maxX: 7, minY: -4, maxY: 10 }, pt => {
+        lkTestPt = pt;
+        const ok = checkLkPt(pt.x, pt.y);
+        document.getElementById('lk-test-result').innerHTML =
+          `Uji Titik <strong>(${pt.x}, ${pt.y})</strong>: <strong class="${ok ? 'text-emerald-600' : 'text-rose-600'}">${ok ? 'Memenuhi Linear & Kuadrat (Masuk Irisan DHP ✅)' : 'Di luar irisan DHP ❌'}</strong>`;
+        playTone(ok ? 660 : 300, 0.1);
+        triggerLkRipple();
+      });
+
+      attachSimulatorClick('canvas-kk', { minX: -5, maxX: 5, minY: -6, maxY: 6 }, pt => {
+        kkTestPt = pt;
+        const ok = checkKkPt(pt.x, pt.y);
+        document.getElementById('kk-test-result').innerHTML =
+          `Uji Titik <strong>(${pt.x}, ${pt.y})</strong>: <strong class="${ok ? 'text-emerald-600' : 'text-rose-600'}">${ok ? 'Memenuhi kedua kurva parabola (Masuk DHP ✅)' : 'Di luar irisan kedua parabola ❌'}</strong>`;
+        playTone(ok ? 660 : 300, 0.1);
+        triggerKkRipple();
+      });
+
+      renderQuizQuestion();
+      renderGameCanvas();
+    });
+
+    window.addEventListener('resize', () => {
+      renderLinearCanvas();
+      renderLkCanvas();
+      renderKkCanvas();
+      if (!document.getElementById('tab-quiz').classList.contains('hidden')) {
+        renderQuizQuestion();
+      }
+      if (!document.getElementById('tab-game').classList.contains('hidden')) {
+        renderGameCanvas();
+      }
+    });
+  </script>
+</body>
+</html>
